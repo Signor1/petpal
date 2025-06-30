@@ -117,27 +117,64 @@ const PetProfile: React.FC<PetProfileProps> = ({ onBack }) => {
   const isFormValid = petData.name.trim() && petData.age.trim() && parseInt(petData.age) > 0;
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20" style={{ fontFamily: 'Poppins, sans-serif' }}>
+    <div className="min-h-screen pb-20 relative overflow-hidden" style={{ backgroundColor: '#F5F5F5' }}>
       {showConfetti && <ConfettiAnimation />}
       
-      <div className="w-full max-w-4xl mx-auto px-4 py-6">
+      {/* Animated Paw Trail Background */}
+      <div className="fixed inset-0 pointer-events-none z-10">
+        {Array.from({ length: 12 }, (_, i) => (
+          <div
+            key={i}
+            className="absolute opacity-25 animate-paw-trail-loop"
+            style={{
+              left: `${8 + (i * 7)}%`,
+              top: `${10 + (i % 5) * 18}%`,
+              animationDelay: `${i * 1.2}s`,
+              animationDuration: '10s',
+              animationIterationCount: 'infinite',
+            }}
+          >
+            <div className="w-6 h-6 text-2xl" style={{ color: '#FF6F61' }}>🐾</div>
+          </div>
+        ))}
+      </div>
+      
+      <div className="relative z-20 w-full max-w-4xl mx-auto px-4 py-6">
         {/* Header */}
         <header className="flex items-center mb-8">
           <button
             onClick={onBack}
-            className="mr-4 p-2 rounded-full hover:bg-gray-200 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-teal-400 focus:ring-opacity-50"
+            className="mr-4 p-3 rounded-full transition-all duration-300 hover:scale-110 animate-pulse-on-hover focus:outline-none focus:ring-2 focus:ring-opacity-50"
+            style={{ 
+              backgroundColor: '#26A69A',
+              color: 'white',
+              boxShadow: '0 4px 16px 0 rgba(38, 166, 154, 0.3)'
+            }}
             aria-label="Go back to home screen"
           >
-            <ArrowLeft size={24} className="text-gray-700" />
+            <ArrowLeft size={24} />
           </button>
-          <div className="flex items-center space-x-3">
-            <div className="animate-bounce">
-              <Heart size={32} className="text-teal-500" />
+          <div className="flex items-center space-x-4">
+            <div className="animate-bounce-gentle">
+              <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: '#26A69A' }}>
+                <span className="text-2xl">🐾</span>
+              </div>
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-teal-500">My Pet</h1>
+              <h1 
+                className="text-4xl font-bold animate-bounce-gentle"
+                style={{ 
+                  fontFamily: 'Bubblegum Sans, cursive',
+                  fontSize: '32px',
+                  color: '#26A69A'
+                }}
+              >
+                My Pet
+              </h1>
               {currentUser && (
-                <p className="text-sm text-gray-600">Profile for {currentUser}</p>
+                <p className="text-sm mt-1" style={{ color: '#546E7A', fontFamily: 'Inter, sans-serif' }}>
+                  Profile for {currentUser}
+                </p>
               )}
             </div>
           </div>
@@ -145,24 +182,28 @@ const PetProfile: React.FC<PetProfileProps> = ({ onBack }) => {
 
         {/* Success Message */}
         {showSuccess && (
-          <div className="mb-6 p-4 bg-pink-100 border border-pink-300 rounded-lg flex items-center space-x-3 animate-fade-in max-w-2xl mx-auto">
-            <div className="animate-pulse">
-              <CheckCircle size={24} className="text-pink-600" />
+          <div className="mb-6 glassmorphic-card p-4 animate-fade-in max-w-2xl mx-auto" style={{ backgroundColor: 'rgba(255, 213, 79, 0.2)' }}>
+            <div className="flex items-center space-x-3">
+              <div className="animate-heart-beat">
+                <CheckCircle size={24} style={{ color: '#FFD54F' }} />
+              </div>
+              <span className="font-medium" style={{ color: '#37474F', fontFamily: 'Inter, sans-serif' }}>
+                Profile Saved! Redirecting to Home...
+              </span>
             </div>
-            <span className="text-pink-800 font-medium">Profile Saved! Redirecting to Home...</span>
           </div>
         )}
 
-        {/* Profile Form */}
-        <div className="bg-white rounded-xl shadow-lg p-6 max-w-2xl mx-auto">
-          <div className="text-center mb-6">
-            <div className="w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-3">
-              <Heart size={32} className="text-pink-500" />
+        {/* Glassmorphic Profile Form */}
+        <div className="glassmorphic-card p-8 max-w-2xl mx-auto">
+          <div className="text-center mb-8">
+            <div className="w-16 h-16 glassmorphic-icon mx-auto mb-4">
+              <Heart size={32} style={{ color: '#FF6F61' }} />
             </div>
-            <h2 className="text-xl font-semibold text-gray-800">
+            <h2 className="text-xl font-semibold mb-2" style={{ color: '#37474F', fontFamily: 'Inter, sans-serif' }}>
               {petData.name ? `${petData.name}'s Profile` : 'Create Pet Profile'}
             </h2>
-            <p className="text-gray-600 text-sm mt-2">
+            <p className="text-sm" style={{ color: '#546E7A', fontFamily: 'Inter, sans-serif' }}>
               Tell us about your furry friend to get personalized care recommendations
             </p>
           </div>
@@ -170,7 +211,11 @@ const PetProfile: React.FC<PetProfileProps> = ({ onBack }) => {
           <form className="space-y-6">
             {/* Pet Name */}
             <div>
-              <label htmlFor="petName" className="block text-sm font-semibold text-gray-700 mb-2">
+              <label 
+                htmlFor="petName" 
+                className="block text-sm font-semibold mb-3"
+                style={{ color: '#37474F', fontFamily: 'Inter, sans-serif' }}
+              >
                 Pet Name *
               </label>
               <input
@@ -178,7 +223,12 @@ const PetProfile: React.FC<PetProfileProps> = ({ onBack }) => {
                 id="petName"
                 value={petData.name}
                 onChange={(e) => handleInputChange('name', e.target.value)}
-                className="w-full px-4 py-3 border-2 border-pink-300 rounded-lg focus:border-pink-400 focus:ring-2 focus:ring-pink-200 focus:ring-opacity-50 transition-all duration-200 text-gray-800 placeholder-gray-400"
+                className="glassmorphic-input w-full px-4 py-4 rounded-xl transition-all duration-300"
+                style={{ 
+                  fontFamily: 'Inter, sans-serif',
+                  fontSize: '16px',
+                  color: '#37474F'
+                }}
                 placeholder="Enter your pet's name (e.g., Rover, Bella, Max)"
                 required
               />
@@ -186,14 +236,23 @@ const PetProfile: React.FC<PetProfileProps> = ({ onBack }) => {
 
             {/* Breed */}
             <div>
-              <label htmlFor="breed" className="block text-sm font-semibold text-gray-700 mb-2">
+              <label 
+                htmlFor="breed" 
+                className="block text-sm font-semibold mb-3"
+                style={{ color: '#37474F', fontFamily: 'Inter, sans-serif' }}
+              >
                 Breed
               </label>
               <select
                 id="breed"
                 value={petData.breed}
                 onChange={(e) => handleInputChange('breed', e.target.value)}
-                className="w-full px-4 py-3 border-2 border-pink-300 rounded-lg focus:border-pink-400 focus:ring-2 focus:ring-pink-200 focus:ring-opacity-50 transition-all duration-200 text-gray-800 bg-white"
+                className="glassmorphic-input w-full px-4 py-4 rounded-xl transition-all duration-300"
+                style={{ 
+                  fontFamily: 'Inter, sans-serif',
+                  fontSize: '16px',
+                  color: '#37474F'
+                }}
               >
                 <optgroup label="Popular Dog Breeds">
                   <option value="Labrador">Labrador Retriever</option>
@@ -226,7 +285,11 @@ const PetProfile: React.FC<PetProfileProps> = ({ onBack }) => {
 
             {/* Age */}
             <div>
-              <label htmlFor="age" className="block text-sm font-semibold text-gray-700 mb-2">
+              <label 
+                htmlFor="age" 
+                className="block text-sm font-semibold mb-3"
+                style={{ color: '#37474F', fontFamily: 'Inter, sans-serif' }}
+              >
                 Age (years) *
               </label>
               <input
@@ -237,18 +300,27 @@ const PetProfile: React.FC<PetProfileProps> = ({ onBack }) => {
                 step="1"
                 value={petData.age}
                 onChange={(e) => handleInputChange('age', e.target.value)}
-                className="w-full px-4 py-3 border-2 border-pink-300 rounded-lg focus:border-pink-400 focus:ring-2 focus:ring-pink-200 focus:ring-opacity-50 transition-all duration-200 text-gray-800 placeholder-gray-400"
+                className="glassmorphic-input w-full px-4 py-4 rounded-xl transition-all duration-300"
+                style={{ 
+                  fontFamily: 'Inter, sans-serif',
+                  fontSize: '16px',
+                  color: '#37474F'
+                }}
                 placeholder="Enter your pet's age in years"
                 required
               />
-              <p className="mt-1 text-xs text-gray-500">
+              <p className="mt-2 text-xs" style={{ color: '#546E7A', fontFamily: 'Inter, sans-serif' }}>
                 💡 If unsure, estimate based on size and behavior
               </p>
             </div>
 
             {/* Health Conditions */}
             <div>
-              <label htmlFor="healthConditions" className="block text-sm font-semibold text-gray-700 mb-2">
+              <label 
+                htmlFor="healthConditions" 
+                className="block text-sm font-semibold mb-3"
+                style={{ color: '#37474F', fontFamily: 'Inter, sans-serif' }}
+              >
                 Health Conditions & Notes
               </label>
               <textarea
@@ -256,10 +328,15 @@ const PetProfile: React.FC<PetProfileProps> = ({ onBack }) => {
                 rows={4}
                 value={petData.healthConditions}
                 onChange={(e) => handleInputChange('healthConditions', e.target.value)}
-                className="w-full px-4 py-3 border-2 border-pink-300 rounded-lg focus:border-pink-400 focus:ring-2 focus:ring-pink-200 focus:ring-opacity-50 transition-all duration-200 text-gray-800 placeholder-gray-400 resize-none"
+                className="glassmorphic-input w-full px-4 py-4 rounded-xl transition-all duration-300 resize-none"
+                style={{ 
+                  fontFamily: 'Inter, sans-serif',
+                  fontSize: '16px',
+                  color: '#37474F'
+                }}
                 placeholder="Enter any health conditions, allergies, medications, or special notes about your pet... (e.g., 'Allergic to chicken, takes arthritis medication daily')"
               />
-              <p className="mt-1 text-xs text-gray-500">
+              <p className="mt-2 text-xs" style={{ color: '#546E7A', fontFamily: 'Inter, sans-serif' }}>
                 📝 This helps us provide better personalized care recommendations
               </p>
             </div>
@@ -269,58 +346,61 @@ const PetProfile: React.FC<PetProfileProps> = ({ onBack }) => {
               type="button"
               onClick={handleSave}
               disabled={!isFormValid}
-              className={`w-full py-4 px-6 rounded-lg font-semibold text-white transition-all duration-300 flex items-center justify-center space-x-2 ${
+              className={`glassmorphic-button w-full py-4 px-6 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center space-x-3 ${
                 isFormValid
-                  ? 'bg-teal-500 hover:bg-teal-600 hover:scale-105 shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-teal-400 focus:ring-opacity-50'
-                  : 'bg-gray-300 cursor-not-allowed'
+                  ? 'hover:scale-105 hover:shadow-neumorphic-hover animate-pulse-on-hover'
+                  : 'opacity-60 cursor-not-allowed'
               }`}
+              style={{ fontFamily: 'Inter, sans-serif' }}
             >
-              <Heart size={20} />
-              <span>Save Profile</span>
+              <Heart size={20} style={{ color: '#37474F' }} />
+              <span style={{ color: '#37474F' }}>Save Profile</span>
             </button>
           </form>
 
           {/* Form Validation Note */}
-          <div className="mt-4 p-3 bg-gray-50 rounded-lg">
-            <p className="text-sm text-gray-600 text-center">
-              <span className="text-red-500">*</span> Required fields - Name and Age are needed for personalized recommendations
+          <div className="mt-6 glassmorphic-helper p-4 rounded-lg">
+            <p className="text-sm text-center" style={{ color: '#37474F', fontFamily: 'Inter, sans-serif' }}>
+              <span style={{ color: '#FF6F61' }}>*</span> Required fields - Name and Age are needed for personalized recommendations
             </p>
           </div>
         </div>
 
         {/* Tips Section */}
-        <div className="mt-8 p-4 bg-pink-100 rounded-lg border border-pink-200 max-w-2xl mx-auto">
-          <h3 className="font-semibold text-gray-800 mb-2 flex items-center space-x-2">
-            <Heart size={16} className="text-pink-500" />
+        <div className="mt-8 glassmorphic-card p-6 max-w-2xl mx-auto">
+          <h3 className="font-semibold mb-4 flex items-center space-x-2" style={{ color: '#37474F', fontFamily: 'Inter, sans-serif' }}>
+            <Heart size={16} style={{ color: '#FF6F61' }} />
             <span>Why We Need This Info</span>
           </h3>
-          <div className="space-y-2 text-gray-600 text-sm">
-            <div className="flex items-start space-x-2">
-              <span className="text-pink-500 mt-0.5">•</span>
-              <p><strong>Name:</strong> Personalizes tips and reminders just for your pet</p>
+          <div className="space-y-3 text-sm" style={{ color: '#546E7A', fontFamily: 'Inter, sans-serif' }}>
+            <div className="flex items-start space-x-3">
+              <span className="mt-1" style={{ color: '#FF6F61' }}>•</span>
+              <p><strong style={{ color: '#37474F' }}>Name:</strong> Personalizes tips and reminders just for your pet</p>
             </div>
-            <div className="flex items-start space-x-2">
-              <span className="text-pink-500 mt-0.5">•</span>
-              <p><strong>Breed:</strong> Provides breed-specific care recommendations</p>
+            <div className="flex items-start space-x-3">
+              <span className="mt-1" style={{ color: '#FF6F61' }}>•</span>
+              <p><strong style={{ color: '#37474F' }}>Breed:</strong> Provides breed-specific care recommendations</p>
             </div>
-            <div className="flex items-start space-x-2">
-              <span className="text-pink-500 mt-0.5">•</span>
-              <p><strong>Age:</strong> Adjusts advice for puppies, adults, or senior pets</p>
+            <div className="flex items-start space-x-3">
+              <span className="mt-1" style={{ color: '#FF6F61' }}>•</span>
+              <p><strong style={{ color: '#37474F' }}>Age:</strong> Adjusts advice for puppies, adults, or senior pets</p>
             </div>
-            <div className="flex items-start space-x-2">
-              <span className="text-pink-500 mt-0.5">•</span>
-              <p><strong>Health Notes:</strong> Ensures safe, relevant care suggestions</p>
+            <div className="flex items-start space-x-3">
+              <span className="mt-1" style={{ color: '#FF6F61' }}>•</span>
+              <p><strong style={{ color: '#37474F' }}>Health Notes:</strong> Ensures safe, relevant care suggestions</p>
             </div>
           </div>
         </div>
 
         {/* Data Privacy Note */}
-        <div className="mt-4 p-3 bg-teal-50 border border-teal-200 rounded-lg max-w-2xl mx-auto">
-          <div className="flex items-start space-x-2">
-            <span className="text-teal-500 text-lg">🔒</span>
+        <div className="mt-6 glassmorphic-helper p-4 rounded-lg max-w-2xl mx-auto">
+          <div className="flex items-start space-x-3">
+            <span className="text-lg">🔒</span>
             <div>
-              <p className="text-teal-800 font-medium text-sm mb-1">Your Data is Safe</p>
-              <p className="text-teal-700 text-xs">
+              <p className="font-medium text-sm mb-1" style={{ color: '#26A69A', fontFamily: 'Inter, sans-serif' }}>
+                Your Data is Safe
+              </p>
+              <p className="text-xs" style={{ color: '#546E7A', fontFamily: 'Inter, sans-serif' }}>
                 All pet information is stored locally on your device and linked to your email. 
                 We never share your personal or pet data with third parties.
               </p>

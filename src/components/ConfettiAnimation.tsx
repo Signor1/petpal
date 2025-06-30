@@ -4,8 +4,9 @@ const ConfettiAnimation: React.FC = () => {
   const [confetti, setConfetti] = useState<Array<{ id: number; left: number; delay: number; color: string }>>([]);
 
   useEffect(() => {
-    const colors = ['#4DB6AC', '#FFCA28', '#F48FB1', '#81C784', '#FFB74D'];
-    const confettiPieces = Array.from({ length: 50 }, (_, i) => ({
+    // Sunlit yellow confetti pieces
+    const colors = ['#FFD54F', '#FFEB3B', '#FFF176', '#FFEE58', '#FFF59D'];
+    const confettiPieces = Array.from({ length: 60 }, (_, i) => ({
       id: i,
       left: Math.random() * 100,
       delay: Math.random() * 3,
@@ -17,7 +18,7 @@ const ConfettiAnimation: React.FC = () => {
     // Clean up after animation
     const timer = setTimeout(() => {
       setConfetti([]);
-    }, 4000);
+    }, 5000);
     
     return () => clearTimeout(timer);
   }, []);
@@ -27,11 +28,13 @@ const ConfettiAnimation: React.FC = () => {
       {confetti.map((piece) => (
         <div
           key={piece.id}
-          className="absolute w-2 h-2 opacity-70 animate-confetti"
+          className="absolute w-3 h-3 opacity-80 animate-confetti"
           style={{
             left: `${piece.left}%`,
             backgroundColor: piece.color,
             animationDelay: `${piece.delay}s`,
+            borderRadius: '50%',
+            boxShadow: `0 0 6px ${piece.color}`,
           }}
         />
       ))}
