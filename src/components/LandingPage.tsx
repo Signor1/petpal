@@ -119,12 +119,13 @@ const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted }) => {
               {/* Get Started Button */}
               <button
                 onClick={handleGetStarted}
-                className="px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-300 hover:scale-105 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-orange-200 flex items-center space-x-3"
+                className="px-8 py-4 font-semibold text-lg transition-all duration-300 hover:scale-105 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-orange-200 flex items-center space-x-3"
                 style={{
                   backgroundColor: '#F28C38',
                   color: '#FFFFFF',
                   fontFamily: 'Poppins, sans-serif',
-                  boxShadow: '0 8px 25px rgba(242, 140, 56, 0.3)'
+                  boxShadow: '0 8px 25px rgba(242, 140, 56, 0.3)',
+                  borderRadius: '12px'
                 }}
               >
                 <span>Get Started Free</span>
@@ -152,7 +153,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted }) => {
 
             {/* Right Content - Hero Image */}
             <div className="relative">
-              <div className="relative overflow-hidden rounded-2xl shadow-2xl">
+              <div className="relative overflow-hidden shadow-2xl" style={{ borderRadius: '12px' }}>
                 {/* High-resolution dog image placeholder with zoom effect */}
                 <div 
                   className="w-full h-96 bg-gradient-to-br from-orange-100 to-blue-100 flex items-center justify-center transition-transform duration-700 hover:scale-105"
@@ -167,10 +168,10 @@ const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted }) => {
                 </div>
                 
                 {/* Floating elements */}
-                <div className="absolute top-4 right-4 bg-white rounded-full p-3 shadow-lg animate-bounce">
+                <div className="absolute top-4 right-4 bg-white p-3 shadow-lg animate-bounce" style={{ borderRadius: '12px' }}>
                   <Heart size={24} style={{ color: '#F28C38' }} />
                 </div>
-                <div className="absolute bottom-4 left-4 bg-white rounded-full p-3 shadow-lg animate-pulse">
+                <div className="absolute bottom-4 left-4 bg-white p-3 shadow-lg animate-pulse" style={{ borderRadius: '12px' }}>
                   <span className="text-2xl">🐾</span>
                 </div>
               </div>
@@ -278,8 +279,11 @@ const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted }) => {
               </blockquote>
               <div className="flex items-center justify-center space-x-4">
                 <div 
-                  className="w-16 h-16 rounded-full bg-white flex items-center justify-center"
-                  style={{ backgroundColor: '#F5E8C7' }}
+                  className="w-16 h-16 flex items-center justify-center"
+                  style={{ 
+                    backgroundColor: '#F5E8C7',
+                    borderRadius: '12px'
+                  }}
                 >
                   <span className="text-2xl">👩</span>
                 </div>
@@ -335,12 +339,13 @@ const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted }) => {
             </p>
             <button
               onClick={handleGetStarted}
-              className="px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-300 hover:scale-105 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-orange-200"
+              className="px-8 py-4 font-semibold text-lg transition-all duration-300 hover:scale-105 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-orange-200"
               style={{
                 backgroundColor: '#F28C38',
                 color: '#FFFFFF',
                 fontFamily: 'Poppins, sans-serif',
-                boxShadow: '0 8px 25px rgba(242, 140, 56, 0.3)'
+                boxShadow: '0 8px 25px rgba(242, 140, 56, 0.3)',
+                borderRadius: '12px'
               }}
             >
               Start Free Today
@@ -375,26 +380,35 @@ const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted }) => {
               href="https://bolt.new"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center space-x-3 px-6 py-3 rounded-full transition-all duration-300 hover:scale-105 bg-gray-50 hover:bg-gray-100"
-              style={{ fontFamily: 'Poppins, sans-serif' }}
+              className="inline-flex items-center space-x-3 px-6 py-3 transition-all duration-300 hover:scale-105 bg-gray-50 hover:bg-gray-100"
+              style={{ 
+                fontFamily: 'Poppins, sans-serif',
+                borderRadius: '12px'
+              }}
             >
               <span style={{ color: '#666666' }}>Built with</span>
               <span className="font-semibold" style={{ color: '#4A90E2' }}>Bolt.new</span>
-              <span className="text-xs px-3 py-1 rounded-full text-white" style={{ backgroundColor: '#4A90E2' }}>+ Voice AI</span>
+              <span className="text-xs px-3 py-1 text-white" style={{ backgroundColor: '#4A90E2', borderRadius: '12px' }}>+ Voice AI</span>
             </a>
 
             {/* Social Icons */}
             <div className="flex items-center space-x-4">
               <button 
-                className="w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-md"
-                style={{ backgroundColor: '#F28C38' }}
+                className="w-12 h-12 flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-md"
+                style={{ 
+                  backgroundColor: '#F28C38',
+                  borderRadius: '12px'
+                }}
                 title="Follow us on Twitter"
               >
                 <Twitter size={20} style={{ color: '#FFFFFF' }} />
               </button>
               <button 
-                className="w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-md"
-                style={{ backgroundColor: '#F28C38' }}
+                className="w-12 h-12 flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-md"
+                style={{ 
+                  backgroundColor: '#F28C38',
+                  borderRadius: '12px'
+                }}
                 title="Follow us on Instagram"
               >
                 <Instagram size={20} style={{ color: '#FFFFFF' }} />
