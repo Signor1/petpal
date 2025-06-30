@@ -100,7 +100,10 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
             style={{ 
               fontFamily: 'Bubblegum Sans, cursive',
               fontSize: '32px',
-              color: '#26A69A'
+              background: 'linear-gradient(135deg, #26A69A 0%, #FF6F61 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text'
             }}
           >
             Welcome to PetPal
@@ -250,3 +253,5 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
 };
 
 export default LoginScreen;
+
+export default LoginScreen
