@@ -91,6 +91,15 @@
       transform: scale(1.02);
     }
   }
+
+  @keyframes zoom {
+    0%, 100% { 
+      transform: scale(1);
+    }
+    50% { 
+      transform: scale(1.05);
+    }
+  }
   
   @keyframes heart-beat {
     0%, 100% { transform: scale(1); }
@@ -123,6 +132,10 @@
 
   .animate-pulse-on-hover:hover {
     animation: pulse-on-hover 1s ease-in-out infinite;
+  }
+
+  .animate-zoom {
+    animation: zoom 2s ease-in-out infinite alternate;
   }
   
   .animate-heart-beat {
