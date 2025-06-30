@@ -12,22 +12,33 @@ import Reminders from './components/Reminders';
 import BottomNavigation from './components/BottomNavigation';
 import ScreenTransition from './components/ScreenTransition';
 import LoadingScreen from './components/LoadingScreen';
+import LoginScreen from './components/LoginScreen';
 
-type ScreenType = 'home' | 'profile' | 'care-tips' | 'health-tracker' | 'vet-finder' | 'reminders';
+type ScreenType = 'login' | 'home' | 'profile' | 'care-tips' | 'health-tracker' | 'vet-finder' | 'reminders';
 
 function App() {
   const [pawPoints, setPawPoints] = useState(0);
   const [showProfile, setShowProfile] = useState(false);
-  const [currentScreen, setCurrentScreen] = useState<ScreenType>('home');
+  const [currentScreen, setCurrentScreen] = useState<ScreenType>('login');
   const [isLoading, setIsLoading] = useState(true);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [currentUser, setCurrentUser] = useState<string | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   // Initialize app
   useEffect(() => {
-    // Load saved paw points
-    const savedPoints = localStorage.getItem('petpal-paw-points');
-    if (savedPoints) {
-      setPawPoints(parseInt(savedPoints, 10));
+    // Check if user is already logged in
+    const savedUser = localStorage.getItem('petpal-current-user');
+    if (savedUser) {
+      setCurrentUser(savedUser);
+      setIsAuthenticated(true);
+      setCurrentScreen('home');
+      
+      // Load saved paw points
+      const savedPoints = localStorage.getItem('petpal-paw-points');
+      if (savedPoints) {
+        setPawPoints(parseInt(savedPoints, 10));
+      }
     }
 
     // Simulate loading time
@@ -40,8 +51,36 @@ function App() {
 
   // Save paw points whenever they change
   useEffect(() => {
-    localStorage.setItem('petpal-paw-points', pawPoints.toString());
-  }, [pawPoints]);
+    if (isAuthenticated) {
+      localStorage.setItem('petpal-paw-points', pawPoints.toString());
+    }
+  }, [pawPoints, isAuthenticated]);
+
+  const handleLogin = (email: string, isNewUser: boolean) => {
+    setCurrentUser(email);
+    setIsAuthenticated(true);
+    localStorage.setItem('petpal-current-user', email);
+    
+    // Navigate to appropriate screen
+    if (isNewUser) {
+      handleNavigate('profile');
+    } else {
+      handleNavigate('home');
+      // Load existing paw points
+      const savedPoints = localStorage.getItem('petpal-paw-points');
+      if (savedPoints) {
+        setPawPoints(parseInt(savedPoints, 10));
+      }
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('petpal-current-user');
+    setCurrentUser(null);
+    setIsAuthenticated(false);
+    setPawPoints(0);
+    setCurrentScreen('login');
+  };
 
   const handleAvatarClick = () => {
     setShowProfile(!showProfile);
@@ -85,6 +124,11 @@ function App() {
   // Show loading screen
   if (isLoading) {
     return <LoadingScreen />;
+  }
+
+  // Show login screen if not authenticated
+  if (!isAuthenticated) {
+    return <LoginScreen onLogin={handleLogin} />;
   }
 
   const renderScreen = () => {
@@ -134,8 +178,21 @@ function App() {
               <div className="w-full max-w-4xl mx-auto px-4 py-6">
                 {/* Header */}
                 <header className="text-center mb-8">
-                  <h1 className="text-4xl font-bold text-teal-500 mb-2">PetPal</h1>
-                  <p className="text-gray-600 text-sm">Your caring companion for pet wellness</p>
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex-1">
+                      <h1 className="text-4xl font-bold text-teal-500 mb-2">PetPal</h1>
+                      <p className="text-gray-600 text-sm">Your caring companion for pet wellness</p>
+                    </div>
+                    <button
+                      onClick={handleLogout}
+                      className="text-xs bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-2 rounded-full transition-colors duration-200"
+                    >
+                      Sign Out
+                    </button>
+                  </div>
+                  {currentUser && (
+                    <p className="text-gray-500 text-sm">Welcome back, {currentUser}!</p>
+                  )}
                 </header>
 
                 {/* Pet Avatar Section */}
@@ -207,7 +264,9 @@ function App() {
   return (
     <div className="relative min-h-screen bg-gray-50">
       {renderScreen()}
-      <BottomNavigation currentScreen={currentScreen} onNavigate={handleNavigate} />
+      {isAuthenticated && currentScreen !== 'login' && (
+        <BottomNavigation currentScreen={currentScreen} onNavigate={handleNavigate} />
+      )}
     </div>
   );
 }
