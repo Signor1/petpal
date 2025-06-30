@@ -86,11 +86,11 @@
   @keyframes pulse-on-hover {
     0%, 100% { 
       transform: scale(1);
-      box-shadow: 0 10px 40px rgba(0, 105, 92, 0.4), 0 0 20px rgba(255, 138, 128, 0.3);
+      box-shadow: 0 10px 40px rgba(242, 140, 56, 0.3);
     }
     50% { 
       transform: scale(1.02);
-      box-shadow: 0 15px 50px rgba(0, 105, 92, 0.6), 0 0 30px rgba(255, 138, 128, 0.5);
+      box-shadow: 0 15px 50px rgba(242, 140, 56, 0.4);
     }
   }
 
