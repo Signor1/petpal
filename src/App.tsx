@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Heart, Activity, MapPin, Bell, LogOut } from 'lucide-react';
+import LandingPage from './components/LandingPage';
 import PetAvatar from './components/PetAvatar';
 import ActionButton from './components/ActionButton';
 import PawPoints from './components/PawPoints';
@@ -14,7 +15,7 @@ import ScreenTransition from './components/ScreenTransition';
 import LoadingScreen from './components/LoadingScreen';
 import LoginScreen from './components/LoginScreen';
 
-type ScreenType = 'login' | 'home' | 'profile' | 'care-tips' | 'health-tracker' | 'vet-finder' | 'reminders';
+type ScreenType = 'landing' | 'login' | 'home' | 'profile' | 'care-tips' | 'health-tracker' | 'vet-finder' | 'reminders';
 
 interface PetData {
   name: string;
@@ -37,7 +38,7 @@ interface UserRemindersData {
 function App() {
   const [pawPoints, setPawPoints] = useState(0);
   const [showProfile, setShowProfile] = useState(false);
-  const [currentScreen, setCurrentScreen] = useState<ScreenType>('login');
+  const [currentScreen, setCurrentScreen] = useState<ScreenType>('landing');
   const [isLoading, setIsLoading] = useState(true);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [currentUser, setCurrentUser] = useState<string | null>(null);
@@ -115,6 +116,10 @@ function App() {
     }
   }, [pawPoints, isAuthenticated, currentUser]);
 
+  const handleGetStarted = () => {
+    handleNavigate('login');
+  };
+
   const handleLogin = (email: string, isNewUser: boolean) => {
     setCurrentUser(email);
     setIsAuthenticated(true);
@@ -136,7 +141,7 @@ function App() {
     setPawPoints(0);
     setPetData(null);
     setShowProfile(false);
-    setCurrentScreen('login');
+    setCurrentScreen('landing');
   };
 
   const handleAvatarClick = () => {
@@ -196,8 +201,13 @@ function App() {
     return <LoadingScreen />;
   }
 
-  // Show login screen if not authenticated
-  if (!isAuthenticated) {
+  // Show landing page if not authenticated
+  if (!isAuthenticated && currentScreen === 'landing') {
+    return <LandingPage onGetStarted={handleGetStarted} />;
+  }
+
+  // Show login screen
+  if (!isAuthenticated && currentScreen === 'login') {
     return <LoginScreen onLogin={handleLogin} />;
   }
 
@@ -411,7 +421,7 @@ function App() {
   return (
     <div className="relative min-h-screen" style={{ backgroundColor: '#F5F5F5' }}>
       {renderScreen()}
-      {isAuthenticated && currentScreen !== 'login' && (
+      {isAuthenticated && currentScreen !== 'login' && currentScreen !== 'landing' && (
         <BottomNavigation currentScreen={currentScreen} onNavigate={handleNavigate} />
       )}
     </div>
