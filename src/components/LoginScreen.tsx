@@ -9,31 +9,34 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showPawTrail, setShowPawTrail] = useState(true);
+  const [error, setError] = useState('');
 
   const handleLogin = async () => {
-    if (!email.trim()) return;
+    if (!email.trim()) {
+      setError('Please enter your email address');
+      return;
+    }
 
+    if (!isValidEmail(email)) {
+      setError('Please enter a valid email address');
+      return;
+    }
+
+    setError('');
     setIsLoading(true);
 
     // Simulate authentication delay
     await new Promise(resolve => setTimeout(resolve, 1500));
 
     // Check if user exists in localStorage
-    const existingUsers = JSON.parse(localStorage.getItem('petpal-users') || '{}');
-    const userExists = existingUsers[email.toLowerCase()];
-
-    if (userExists) {
-      // Load existing user's pet data
-      const userData = JSON.parse(localStorage.getItem('petpal-profile') || '{}');
+    const userProfileKey = `petpal-profile-${email.toLowerCase()}`;
+    const existingProfile = localStorage.getItem(userProfileKey);
+    
+    if (existingProfile) {
+      // Existing user - load their data
       onLogin(email, false);
     } else {
-      // New user - save email and redirect to profile creation
-      existingUsers[email.toLowerCase()] = {
-        email: email,
-        createdAt: Date.now()
-      };
-      localStorage.setItem('petpal-users', JSON.stringify(existingUsers));
-      localStorage.setItem('petpal-current-user', email);
+      // New user - redirect to profile creation
       onLogin(email, true);
     }
 
@@ -123,16 +126,22 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 onKeyPress={handleKeyPress}
-                className="w-full px-4 py-4 border-2 border-pink-300 rounded-xl focus:border-pink-400 focus:ring-2 focus:ring-pink-200 focus:ring-opacity-50 transition-all duration-200 text-gray-800 placeholder-gray-400 text-lg"
+                className={`w-full px-4 py-4 border-2 rounded-xl focus:ring-2 focus:ring-pink-200 focus:ring-opacity-50 transition-all duration-200 text-gray-800 placeholder-gray-400 text-lg ${
+                  error 
+                    ? 'border-pink-400 focus:border-pink-500' 
+                    : 'border-pink-300 focus:border-pink-400'
+                }`}
                 placeholder="Enter your email"
                 disabled={isLoading}
                 required
               />
-              {email && !isValidEmail(email) && (
-                <p className="mt-2 text-sm text-red-500 flex items-center space-x-1">
-                  <span>⚠️</span>
-                  <span>Please enter a valid email address</span>
-                </p>
+              {error && (
+                <div className="mt-2 p-2 bg-pink-100 border border-pink-300 rounded-lg">
+                  <p className="text-sm text-pink-800 flex items-center space-x-1">
+                    <span>⚠️</span>
+                    <span>{error}</span>
+                  </p>
+                </div>
               )}
             </div>
 

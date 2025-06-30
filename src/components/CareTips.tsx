@@ -20,6 +20,7 @@ const CareTips: React.FC<CareTipsProps> = ({ onBack }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [speechSupported, setSpeechSupported] = useState(false);
   const [currentUtterance, setCurrentUtterance] = useState<SpeechSynthesisUtterance | null>(null);
+  const [currentUser, setCurrentUser] = useState<string | null>(null);
 
   // Mock AI-generated tips database
   const tipCategories = {
@@ -74,10 +75,31 @@ const CareTips: React.FC<CareTipsProps> = ({ onBack }) => {
 
   // Load pet data on component mount
   useEffect(() => {
-    const savedData = localStorage.getItem('petpal-profile');
-    if (savedData) {
-      setPetData(JSON.parse(savedData));
+    // Get current user email
+    const userEmail = localStorage.getItem('petpal-current-user');
+    if (userEmail) {
+      setCurrentUser(userEmail);
+      
+      // Load pet data for this user
+      const userProfileKey = `petpal-profile-${userEmail.toLowerCase()}`;
+      const savedProfile = localStorage.getItem(userProfileKey);
+      if (savedProfile) {
+        try {
+          const profileData = JSON.parse(savedProfile);
+          if (profileData.pet) {
+            setPetData({
+              name: profileData.pet.name || '',
+              breed: profileData.pet.breed || '',
+              age: profileData.pet.age ? profileData.pet.age.toString() : '',
+              healthConditions: profileData.pet.health || ''
+            });
+          }
+        } catch (error) {
+          console.error('Error loading pet profile:', error);
+        }
+      }
     }
+    
     generateNewTip();
   }, []);
 
@@ -228,7 +250,12 @@ const CareTips: React.FC<CareTipsProps> = ({ onBack }) => {
             <div className="animate-bounce">
               <Sparkles size={32} className="text-teal-500" />
             </div>
-            <h1 className="text-3xl font-bold text-teal-500">Daily Care Tips</h1>
+            <div>
+              <h1 className="text-3xl font-bold text-teal-500">Daily Care Tips</h1>
+              {currentUser && petData?.name && (
+                <p className="text-sm text-gray-600">Personalized for {petData.name}</p>
+              )}
+            </div>
           </div>
         </header>
 
@@ -375,6 +402,25 @@ const CareTips: React.FC<CareTipsProps> = ({ onBack }) => {
             )}
           </div>
         </div>
+
+        {/* User Context Info */}
+        {currentUser && (
+          <div className="mt-6 p-4 bg-teal-50 border border-teal-200 rounded-lg max-w-2xl mx-auto">
+            <div className="flex items-center space-x-3">
+              <div className="w-8 h-8 bg-teal-500 rounded-full flex items-center justify-center">
+                <span className="text-white text-sm">👤</span>
+              </div>
+              <div>
+                <p className="text-teal-800 font-medium text-sm">
+                  Care tips for {currentUser}
+                </p>
+                <p className="text-teal-700 text-xs">
+                  Tips are personalized based on your pet's profile
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Disclaimer */}
         <div className="mt-6 p-4 bg-gray-100 rounded-lg max-w-2xl mx-auto">
