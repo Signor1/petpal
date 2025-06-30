@@ -36,6 +36,7 @@ const HealthTracker: React.FC<HealthTrackerProps> = ({ onBack }) => {
   const [aiSuggestion, setAiSuggestion] = useState('');
   const [showSuccess, setShowSuccess] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
+  const [showHeartAnimation, setShowHeartAnimation] = useState(false);
   const [petData, setPetData] = useState<PetData | null>(null);
   const [currentUser, setCurrentUser] = useState<string | null>(null);
 
@@ -118,14 +119,14 @@ const HealthTracker: React.FC<HealthTrackerProps> = ({ onBack }) => {
           {
             id: '1',
             date: '2024-01-15',
-            symptom: 'Slight limping on left paw',
+            symptom: petData?.name ? `${petData.name} had slight limping on left paw` : 'Slight limping on left paw',
             weight: '45',
             timestamp: Date.now() - 86400000 * 7
           },
           {
             id: '2',
             date: '2024-01-10',
-            symptom: 'Normal checkup - all good!',
+            symptom: petData?.name ? `${petData.name} normal checkup - all good!` : 'Normal checkup - all good!',
             weight: '44.5',
             timestamp: Date.now() - 86400000 * 12
           }
@@ -140,7 +141,7 @@ const HealthTracker: React.FC<HealthTrackerProps> = ({ onBack }) => {
         setEntries(sampleEntries);
       }
     }
-  }, []);
+  }, [petData?.name]);
 
   const generateAISuggestion = (symptom: string, weight: string) => {
     const symptomLower = symptom.toLowerCase();
@@ -219,9 +220,10 @@ const HealthTracker: React.FC<HealthTrackerProps> = ({ onBack }) => {
     const suggestion = generateAISuggestion(formData.symptom, formData.weight);
     setAiSuggestion(suggestion);
 
-    // Show success animation
+    // Show success animations
     setShowSuccess(true);
     setShowConfetti(true);
+    setShowHeartAnimation(true);
 
     // Reset form
     setFormData({
@@ -230,15 +232,18 @@ const HealthTracker: React.FC<HealthTrackerProps> = ({ onBack }) => {
       weight: ''
     });
 
-    // Hide success message
+    // Hide animations
     setTimeout(() => {
       setShowSuccess(false);
-    }, 3000);
+    }, 4000);
 
-    // Hide confetti
     setTimeout(() => {
       setShowConfetti(false);
-    }, 4000);
+    }, 5000);
+
+    setTimeout(() => {
+      setShowHeartAnimation(false);
+    }, 3000);
   };
 
   const formatDate = (dateString: string) => {
@@ -252,27 +257,87 @@ const HealthTracker: React.FC<HealthTrackerProps> = ({ onBack }) => {
   const isFormValid = formData.symptom.trim() && formData.date;
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20" style={{ fontFamily: 'Poppins, sans-serif' }}>
+    <div className="min-h-screen pb-20 relative overflow-hidden" style={{ backgroundColor: '#F5F5F5' }}>
       {showConfetti && <ConfettiAnimation />}
       
-      <div className="w-full max-w-4xl mx-auto px-4 py-6">
+      {/* Heart Animation on Save */}
+      {showHeartAnimation && (
+        <div className="fixed inset-0 pointer-events-none z-50 flex items-center justify-center">
+          {Array.from({ length: 8 }, (_, i) => (
+            <div
+              key={i}
+              className="absolute animate-heart-beat"
+              style={{
+                left: `${45 + (i % 3) * 5}%`,
+                top: `${40 + (i % 3) * 5}%`,
+                animationDelay: `${i * 0.2}s`,
+                animationDuration: '1s',
+              }}
+            >
+              <Heart size={24} style={{ color: '#FF6F61' }} />
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Animated Paw Trail Background */}
+      <div className="fixed inset-0 pointer-events-none z-10">
+        {Array.from({ length: 12 }, (_, i) => (
+          <div
+            key={i}
+            className="absolute opacity-20 animate-paw-trail-loop"
+            style={{
+              left: `${8 + (i * 7)}%`,
+              top: `${10 + (i % 5) * 18}%`,
+              animationDelay: `${i * 1.2}s`,
+              animationDuration: '10s',
+              animationIterationCount: 'infinite',
+            }}
+          >
+            <div className="w-6 h-6 text-2xl" style={{ color: '#FF6F61' }}>🐾</div>
+          </div>
+        ))}
+      </div>
+      
+      <div className="relative z-20 w-full max-w-4xl mx-auto px-4 py-6">
         {/* Header */}
         <header className="flex items-center mb-8">
           <button
             onClick={onBack}
-            className="mr-4 p-2 rounded-full hover:bg-gray-200 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-teal-400 focus:ring-opacity-50"
+            className="mr-4 p-3 rounded-full transition-all duration-300 hover:scale-110 animate-pulse-on-hover focus:outline-none focus:ring-2 focus:ring-opacity-50"
+            style={{ 
+              backgroundColor: '#26A69A',
+              color: 'white',
+              boxShadow: '0 4px 16px 0 rgba(38, 166, 154, 0.3)'
+            }}
             aria-label="Go back to home screen"
           >
-            <ArrowLeft size={24} className="text-gray-700" />
+            <ArrowLeft size={24} />
           </button>
-          <div className="flex items-center space-x-3">
-            <div className="animate-bounce">
-              <Stethoscope size={32} className="text-teal-500" />
+          <div className="flex items-center space-x-4">
+            <div className="animate-bounce-gentle">
+              <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: '#26A69A' }}>
+                <Stethoscope size={24} className="text-white" />
+              </div>
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-teal-500">Health Tracker</h1>
+              <h1 
+                className="text-4xl font-bold"
+                style={{ 
+                  fontFamily: 'Bubblegum Sans, cursive',
+                  fontSize: '24px',
+                  background: 'linear-gradient(135deg, #26A69A 0%, #FF6F61 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text'
+                }}
+              >
+                Health Tracker
+              </h1>
               {currentUser && petData?.name && (
-                <p className="text-sm text-gray-600">Tracking {petData.name}'s health</p>
+                <p className="text-sm mt-1" style={{ color: '#546E7A', fontFamily: 'Inter, sans-serif' }}>
+                  Tracking {petData.name}'s health
+                </p>
               )}
             </div>
           </div>
@@ -280,26 +345,34 @@ const HealthTracker: React.FC<HealthTrackerProps> = ({ onBack }) => {
 
         {/* Success Message */}
         {showSuccess && (
-          <div className="mb-6 p-4 bg-green-100 border border-green-300 rounded-lg flex items-center space-x-3 animate-fade-in max-w-2xl mx-auto">
-            <div className="animate-heart-beat">
-              <Heart size={24} className="text-green-600" />
+          <div className="mb-6 glassmorphic-card p-4 animate-fade-in max-w-2xl mx-auto" style={{ backgroundColor: 'rgba(76, 175, 80, 0.2)' }}>
+            <div className="flex items-center space-x-3">
+              <div className="animate-heart-beat">
+                <Heart size={24} style={{ color: '#4CAF50' }} />
+              </div>
+              <span className="font-medium" style={{ color: '#37474F', fontFamily: 'Inter, sans-serif' }}>
+                Health entry logged successfully! 🎉
+              </span>
             </div>
-            <span className="text-green-800 font-medium">Health entry logged successfully!</span>
           </div>
         )}
 
-        {/* Logging Form */}
-        <div className="bg-white rounded-xl shadow-lg p-6 mb-6 max-w-2xl mx-auto">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center space-x-2">
-            <Plus size={20} className="text-teal-500" />
+        {/* Glassmorphic Logging Form */}
+        <div className="glassmorphic-card p-6 mb-6 max-w-2xl mx-auto">
+          <h2 className="text-xl font-semibold mb-6 flex items-center space-x-2" style={{ color: '#37474F', fontFamily: 'Inter, sans-serif' }}>
+            <Plus size={20} style={{ color: '#26A69A' }} />
             <span>Log New Entry</span>
           </h2>
 
-          <div className="space-y-4">
+          <div className="space-y-6">
             {/* Date Input */}
             <div>
-              <label htmlFor="date" className="block text-sm font-semibold text-gray-700 mb-2 flex items-center space-x-2">
-                <Calendar size={16} className="text-gray-500" />
+              <label 
+                htmlFor="date" 
+                className="block text-sm font-semibold mb-3 flex items-center space-x-2"
+                style={{ color: '#37474F', fontFamily: 'Inter, sans-serif' }}
+              >
+                <Calendar size={16} style={{ color: '#546E7A' }} />
                 <span>Date</span>
               </label>
               <input
@@ -307,15 +380,24 @@ const HealthTracker: React.FC<HealthTrackerProps> = ({ onBack }) => {
                 id="date"
                 value={formData.date}
                 onChange={(e) => handleInputChange('date', e.target.value)}
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-teal-400 focus:ring-2 focus:ring-teal-200 focus:ring-opacity-50 transition-all duration-200 text-gray-800"
+                className="glassmorphic-input w-full px-4 py-4 rounded-xl transition-all duration-300"
+                style={{ 
+                  fontFamily: 'Inter, sans-serif',
+                  fontSize: '16px',
+                  color: '#37474F'
+                }}
                 required
               />
             </div>
 
             {/* Symptom Input */}
             <div>
-              <label htmlFor="symptom" className="block text-sm font-semibold text-gray-700 mb-2 flex items-center space-x-2">
-                <AlertTriangle size={16} className="text-gray-500" />
+              <label 
+                htmlFor="symptom" 
+                className="block text-sm font-semibold mb-3 flex items-center space-x-2"
+                style={{ color: '#37474F', fontFamily: 'Inter, sans-serif' }}
+              >
+                <AlertTriangle size={16} style={{ color: '#546E7A' }} />
                 <span>Symptom or Observation *</span>
               </label>
               <input
@@ -323,16 +405,25 @@ const HealthTracker: React.FC<HealthTrackerProps> = ({ onBack }) => {
                 id="symptom"
                 value={formData.symptom}
                 onChange={(e) => handleInputChange('symptom', e.target.value)}
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-teal-400 focus:ring-2 focus:ring-teal-200 focus:ring-opacity-50 transition-all duration-200 text-gray-800 placeholder-gray-400"
-                placeholder="e.g., limping, coughing, normal behavior..."
+                className="glassmorphic-input w-full px-4 py-4 rounded-xl transition-all duration-300 border-coral-glow"
+                style={{ 
+                  fontFamily: 'Inter, sans-serif',
+                  fontSize: '16px',
+                  color: '#37474F'
+                }}
+                placeholder={petData?.name ? `e.g., ${petData.name} is limping, coughing, normal behavior...` : "e.g., limping, coughing, normal behavior..."}
                 required
               />
             </div>
 
             {/* Weight Input */}
             <div>
-              <label htmlFor="weight" className="block text-sm font-semibold text-gray-700 mb-2 flex items-center space-x-2">
-                <Weight size={16} className="text-gray-500" />
+              <label 
+                htmlFor="weight" 
+                className="block text-sm font-semibold mb-3 flex items-center space-x-2"
+                style={{ color: '#37474F', fontFamily: 'Inter, sans-serif' }}
+              >
+                <Weight size={16} style={{ color: '#546E7A' }} />
                 <span>Weight (lbs)</span>
               </label>
               <input
@@ -342,7 +433,12 @@ const HealthTracker: React.FC<HealthTrackerProps> = ({ onBack }) => {
                 min="0"
                 value={formData.weight}
                 onChange={(e) => handleInputChange('weight', e.target.value)}
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-teal-400 focus:ring-2 focus:ring-teal-200 focus:ring-opacity-50 transition-all duration-200 text-gray-800 placeholder-gray-400"
+                className="glassmorphic-input w-full px-4 py-4 rounded-xl transition-all duration-300"
+                style={{ 
+                  fontFamily: 'Inter, sans-serif',
+                  fontSize: '16px',
+                  color: '#37474F'
+                }}
                 placeholder="Enter current weight"
               />
             </div>
@@ -351,11 +447,17 @@ const HealthTracker: React.FC<HealthTrackerProps> = ({ onBack }) => {
             <button
               onClick={handleLogEntry}
               disabled={!isFormValid}
-              className={`w-full py-4 px-6 rounded-lg font-semibold text-gray-800 transition-all duration-300 flex items-center justify-center space-x-2 ${
+              className={`w-full py-4 px-6 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center space-x-3 ${
                 isFormValid
-                  ? 'bg-pink-300 hover:bg-pink-400 hover:scale-105 shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-pink-400 focus:ring-opacity-50'
-                  : 'bg-gray-300 cursor-not-allowed'
+                  ? 'hover:scale-105 shadow-lg hover:shadow-xl animate-pulse-on-hover focus:outline-none focus:ring-2 focus:ring-opacity-50'
+                  : 'opacity-60 cursor-not-allowed'
               }`}
+              style={{
+                backgroundColor: '#26A69A',
+                color: 'white',
+                fontFamily: 'Inter, sans-serif',
+                boxShadow: '0 8px 32px 0 rgba(38, 166, 154, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 -1px 0 rgba(0, 0, 0, 0.1)'
+              }}
             >
               <Plus size={20} />
               <span>Log Entry</span>
@@ -365,51 +467,57 @@ const HealthTracker: React.FC<HealthTrackerProps> = ({ onBack }) => {
 
         {/* AI Suggestion */}
         {aiSuggestion && (
-          <div className="bg-teal-500 text-white rounded-xl shadow-lg p-6 mb-6 max-w-2xl mx-auto">
-            <h3 className="font-semibold mb-3 flex items-center space-x-2">
-              <Stethoscope size={20} />
+          <div className="glassmorphic-card p-6 mb-6 max-w-2xl mx-auto border-coral-glow">
+            <h3 className="font-semibold mb-4 flex items-center space-x-2" style={{ color: '#37474F', fontFamily: 'Inter, sans-serif' }}>
+              <Stethoscope size={20} style={{ color: '#FF6F61' }} />
               <span>AI Health Suggestion</span>
             </h3>
-            <p className="leading-relaxed">{aiSuggestion}</p>
+            <p className="leading-relaxed mb-4" style={{ color: '#37474F', fontFamily: 'Inter, sans-serif', fontSize: '16px' }}>
+              {aiSuggestion}
+            </p>
             {petData?.name && (
-              <p className="mt-3 text-teal-100 text-sm">
-                💡 Personalized advice for {petData.name}
-              </p>
+              <div className="glassmorphic-helper p-3 rounded-lg">
+                <p className="text-sm" style={{ color: '#26A69A', fontFamily: 'Inter, sans-serif' }}>
+                  💡 Personalized advice for {petData.name}
+                </p>
+              </div>
             )}
           </div>
         )}
 
         {/* Past Entries */}
-        <div className="bg-white rounded-xl shadow-lg p-6 max-w-2xl mx-auto">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center space-x-2">
-            <Heart size={20} className="text-pink-500" />
+        <div className="glassmorphic-card p-6 max-w-2xl mx-auto">
+          <h2 className="text-xl font-semibold mb-6 flex items-center space-x-2" style={{ color: '#37474F', fontFamily: 'Inter, sans-serif' }}>
+            <Heart size={20} style={{ color: '#FF6F61' }} />
             <span>Health History</span>
             {currentUser && (
-              <span className="text-sm text-gray-500 font-normal">({entries.length} entries)</span>
+              <span className="text-sm font-normal" style={{ color: '#546E7A' }}>({entries.length} entries)</span>
             )}
           </h2>
 
           {entries.length === 0 ? (
-            <div className="text-center py-8 text-gray-500">
+            <div className="text-center py-12" style={{ color: '#546E7A' }}>
               <Stethoscope size={48} className="mx-auto mb-4 opacity-50" />
-              <p className="text-lg font-medium mb-2">No health entries yet</p>
-              <p className="text-sm">Log your first entry above to start tracking {petData?.name || 'your pet'}'s health!</p>
+              <p className="text-lg font-medium mb-2" style={{ fontFamily: 'Inter, sans-serif' }}>No health entries yet</p>
+              <p className="text-sm" style={{ fontFamily: 'Inter, sans-serif' }}>
+                Log your first entry above to start tracking {petData?.name || 'your pet'}'s health!
+              </p>
             </div>
           ) : (
             <div className="space-y-4 max-h-96 overflow-y-auto">
               {entries.map((entry) => (
-                <div key={entry.id} className="bg-yellow-400 rounded-lg p-4 shadow-md hover:shadow-lg transition-all duration-300">
-                  <div className="flex justify-between items-start mb-2">
-                    <span className="text-sm font-semibold text-gray-800">
+                <div key={entry.id} className="glassmorphic-card p-4 hover:shadow-lg transition-all duration-300" style={{ backgroundColor: 'rgba(255, 213, 79, 0.3)' }}>
+                  <div className="flex justify-between items-start mb-3">
+                    <span className="text-sm font-semibold" style={{ color: '#37474F', fontFamily: 'Inter, sans-serif' }}>
                       {formatDate(entry.date)}
                     </span>
                     {entry.weight !== 'Not recorded' && (
-                      <span className="text-sm text-gray-700 bg-yellow-300 px-2 py-1 rounded-full font-medium">
+                      <span className="text-sm px-3 py-1 rounded-full font-medium" style={{ backgroundColor: '#FFD54F', color: '#37474F' }}>
                         {entry.weight} lbs
                       </span>
                     )}
                   </div>
-                  <p className="text-gray-800 font-medium">{entry.symptom}</p>
+                  <p className="font-medium" style={{ color: '#37474F', fontFamily: 'Inter, sans-serif' }}>{entry.symptom}</p>
                 </div>
               ))}
             </div>
@@ -418,16 +526,16 @@ const HealthTracker: React.FC<HealthTrackerProps> = ({ onBack }) => {
 
         {/* User Context Info */}
         {currentUser && (
-          <div className="mt-6 p-4 bg-teal-50 border border-teal-200 rounded-lg max-w-2xl mx-auto">
+          <div className="mt-6 glassmorphic-helper p-4 rounded-lg max-w-2xl mx-auto">
             <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-teal-500 rounded-full flex items-center justify-center">
+              <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: '#26A69A' }}>
                 <span className="text-white text-sm">👤</span>
               </div>
               <div>
-                <p className="text-teal-800 font-medium text-sm">
+                <p className="font-medium text-sm" style={{ color: '#26A69A', fontFamily: 'Inter, sans-serif' }}>
                   Health logs for {currentUser}
                 </p>
-                <p className="text-teal-700 text-xs">
+                <p className="text-xs" style={{ color: '#546E7A', fontFamily: 'Inter, sans-serif' }}>
                   All entries are securely stored and linked to your account
                 </p>
               </div>
@@ -436,8 +544,8 @@ const HealthTracker: React.FC<HealthTrackerProps> = ({ onBack }) => {
         )}
 
         {/* Info Section */}
-        <div className="mt-6 p-4 bg-gray-100 rounded-lg max-w-2xl mx-auto">
-          <p className="text-xs text-gray-500 text-center">
+        <div className="mt-6 glassmorphic-card p-4 max-w-2xl mx-auto">
+          <p className="text-xs text-center" style={{ color: '#546E7A', fontFamily: 'Inter, sans-serif' }}>
             ⚠️ This tracker is for monitoring purposes only. Always consult your veterinarian for professional medical advice.
           </p>
         </div>
