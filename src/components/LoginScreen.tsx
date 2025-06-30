@@ -8,7 +8,6 @@ interface LoginScreenProps {
 const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [showPawTrail, setShowPawTrail] = useState(true);
   const [error, setError] = useState('');
 
   const handleLogin = async () => {
@@ -57,67 +56,86 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
   const isFormValid = email.trim() && isValidEmail(email);
 
   return (
-    <div className="min-h-screen bg-gray-50 relative overflow-hidden" style={{ fontFamily: 'Poppins, sans-serif' }}>
+    <div className="min-h-screen bg-cream relative overflow-hidden" style={{ backgroundColor: '#F5F5F5' }}>
       {/* Animated Paw Trail Background */}
-      {showPawTrail && (
-        <div className="fixed inset-0 pointer-events-none z-10">
-          {Array.from({ length: 12 }, (_, i) => (
-            <div
-              key={i}
-              className="absolute opacity-20 animate-paw-trail"
-              style={{
-                left: `${10 + (i * 8)}%`,
-                top: `${20 + (i % 3) * 25}%`,
-                animationDelay: `${i * 0.5}s`,
-                animationDuration: '4s',
-                animationIterationCount: 'infinite',
-              }}
-            >
-              <div className="w-6 h-6 text-teal-500 text-2xl">🐾</div>
-            </div>
-          ))}
-        </div>
-      )}
+      <div className="fixed inset-0 pointer-events-none z-10">
+        {Array.from({ length: 15 }, (_, i) => (
+          <div
+            key={i}
+            className="absolute opacity-30 animate-paw-trail-loop"
+            style={{
+              left: `${5 + (i * 6)}%`,
+              top: `${15 + (i % 4) * 20}%`,
+              animationDelay: `${i * 0.8}s`,
+              animationDuration: '8s',
+              animationIterationCount: 'infinite',
+            }}
+          >
+            <div className="w-8 h-8 text-3xl" style={{ color: '#26A69A' }}>🐾</div>
+          </div>
+        ))}
+      </div>
 
       <div className="relative z-20 w-full max-w-4xl mx-auto px-4 py-8 min-h-screen flex flex-col justify-center">
         {/* Header */}
         <header className="text-center mb-12">
           {/* Animated Pet Avatar */}
-          <div className="w-24 h-24 mx-auto mb-6 relative">
-            <div className="absolute inset-0 bg-teal-500 rounded-full animate-pulse"></div>
-            <div className="absolute top-2 left-2 right-2 bottom-2 bg-teal-400 rounded-full">
+          <div className="w-28 h-28 mx-auto mb-8 relative">
+            <div className="absolute inset-0 rounded-full animate-pulse" style={{ backgroundColor: '#26A69A' }}></div>
+            <div className="absolute top-2 left-2 right-2 bottom-2 rounded-full" style={{ backgroundColor: '#1E8E85' }}>
               {/* Eyes */}
-              <div className="absolute top-4 left-4 w-2 h-2 bg-white rounded-full"></div>
-              <div className="absolute top-4 right-4 w-2 h-2 bg-white rounded-full"></div>
+              <div className="absolute top-5 left-5 w-3 h-3 bg-white rounded-full"></div>
+              <div className="absolute top-5 right-5 w-3 h-3 bg-white rounded-full"></div>
               {/* Nose */}
-              <div className="absolute top-7 left-1/2 transform -translate-x-1/2 w-1.5 h-1.5 bg-white rounded-full"></div>
+              <div className="absolute top-8 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-white rounded-full"></div>
               {/* Mouth */}
-              <div className="absolute top-8 left-1/2 transform -translate-x-1/2 w-4 h-2 border-b-2 border-white rounded-full"></div>
+              <div className="absolute top-10 left-1/2 transform -translate-x-1/2 w-5 h-3 border-b-2 border-white rounded-full"></div>
             </div>
             {/* Wagging tail */}
-            <div className="absolute -right-3 top-6 w-4 h-4 bg-teal-500 rounded-full animate-wag origin-left"></div>
+            <div className="absolute -right-4 top-8 w-5 h-5 rounded-full animate-wag origin-left" style={{ backgroundColor: '#26A69A' }}></div>
           </div>
 
-          <h1 className="text-4xl font-bold text-teal-500 mb-3">Welcome to PetPal</h1>
-          <p className="text-gray-600 text-lg mb-2">Your caring companion for pet wellness</p>
-          <p className="text-gray-500 text-sm">Sign in to access your personalized pet care dashboard</p>
+          <h1 
+            className="text-4xl font-bold mb-4 animate-bounce-gentle"
+            style={{ 
+              fontFamily: 'Bubblegum Sans, cursive',
+              fontSize: '32px',
+              color: '#26A69A'
+            }}
+          >
+            Welcome to PetPal
+          </h1>
+          <p className="text-lg mb-2" style={{ color: '#37474F', fontFamily: 'Inter, sans-serif' }}>
+            Your caring companion for pet wellness
+          </p>
+          <p className="text-sm" style={{ color: '#546E7A', fontFamily: 'Inter, sans-serif' }}>
+            Sign in to access your personalized pet care dashboard
+          </p>
         </header>
 
-        {/* Login Form */}
-        <div className="bg-white rounded-2xl shadow-xl p-8 mb-8 max-w-md mx-auto w-full">
+        {/* Glassmorphic Login Form */}
+        <div className="glassmorphic-card p-8 mb-8 max-w-md mx-auto w-full">
           <div className="text-center mb-6">
-            <div className="w-12 h-12 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-3">
-              <Heart size={24} className="text-pink-500" />
+            <div className="w-14 h-14 glassmorphic-icon mx-auto mb-4">
+              <Heart size={28} style={{ color: '#FF6F61' }} />
             </div>
-            <h2 className="text-xl font-semibold text-gray-800">Sign In to Continue</h2>
-            <p className="text-gray-600 text-sm mt-2">Enter your email to access your pet's profile</p>
+            <h2 className="text-xl font-semibold mb-2" style={{ color: '#37474F', fontFamily: 'Inter, sans-serif' }}>
+              Sign In to Continue
+            </h2>
+            <p className="text-sm" style={{ color: '#546E7A', fontFamily: 'Inter, sans-serif' }}>
+              Enter your email to access your pet's profile
+            </p>
           </div>
 
           <div className="space-y-6">
             {/* Email Input */}
             <div>
-              <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2 flex items-center space-x-2">
-                <Mail size={16} className="text-gray-500" />
+              <label 
+                htmlFor="email" 
+                className="block text-sm font-semibold mb-3 flex items-center space-x-2"
+                style={{ color: '#37474F', fontFamily: 'Inter, sans-serif' }}
+              >
+                <Mail size={16} style={{ color: '#546E7A' }} />
                 <span>Email Address</span>
               </label>
               <input
@@ -126,18 +144,23 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 onKeyPress={handleKeyPress}
-                className={`w-full px-4 py-4 border-2 rounded-xl focus:ring-2 focus:ring-pink-200 focus:ring-opacity-50 transition-all duration-200 text-gray-800 placeholder-gray-400 text-lg ${
+                className={`glassmorphic-input w-full px-4 py-4 rounded-xl transition-all duration-300 text-lg ${
                   error 
-                    ? 'border-pink-400 focus:border-pink-500' 
-                    : 'border-pink-300 focus:border-pink-400'
+                    ? 'border-coral-glow-error' 
+                    : 'border-coral-glow'
                 }`}
+                style={{ 
+                  fontFamily: 'Inter, sans-serif',
+                  fontSize: '16px',
+                  color: '#37474F'
+                }}
                 placeholder="Enter your email"
                 disabled={isLoading}
                 required
               />
               {error && (
-                <div className="mt-2 p-2 bg-pink-100 border border-pink-300 rounded-lg">
-                  <p className="text-sm text-pink-800 flex items-center space-x-1">
+                <div className="mt-3 p-3 glassmorphic-error rounded-lg animate-fade-in">
+                  <p className="text-sm flex items-center space-x-2" style={{ color: '#D32F2F', fontFamily: 'Inter, sans-serif' }}>
                     <span>⚠️</span>
                     <span>{error}</span>
                   </p>
@@ -149,21 +172,22 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
             <button
               onClick={handleLogin}
               disabled={!isFormValid || isLoading}
-              className={`w-full py-4 px-6 rounded-xl font-semibold text-gray-800 transition-all duration-300 flex items-center justify-center space-x-3 text-lg ${
+              className={`glassmorphic-button w-full py-4 px-6 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center space-x-3 text-lg ${
                 isFormValid && !isLoading
-                  ? 'bg-yellow-400 hover:bg-yellow-500 hover:scale-105 shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-opacity-50'
-                  : 'bg-gray-300 cursor-not-allowed'
+                  ? 'hover:scale-105 hover:shadow-neumorphic-hover animate-pulse-on-hover'
+                  : 'opacity-60 cursor-not-allowed'
               }`}
+              style={{ fontFamily: 'Inter, sans-serif' }}
             >
               {isLoading ? (
                 <>
-                  <div className="w-6 h-6 text-teal-500 animate-spin">🐾</div>
-                  <span>Signing In...</span>
+                  <div className="w-6 h-6 animate-spin" style={{ color: '#FFD54F' }}>🐾</div>
+                  <span style={{ color: '#37474F' }}>Signing In...</span>
                 </>
               ) : (
                 <>
-                  <LogIn size={20} />
-                  <span>Log In</span>
+                  <LogIn size={20} style={{ color: '#37474F' }} />
+                  <span style={{ color: '#37474F' }}>Log In</span>
                   <div className="text-xl">🐾</div>
                 </>
               )}
@@ -171,14 +195,14 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
           </div>
 
           {/* Helper Text */}
-          <div className="mt-6 p-4 bg-teal-50 rounded-lg border border-teal-200">
+          <div className="mt-6 glassmorphic-helper p-4 rounded-lg">
             <div className="flex items-start space-x-3">
               <div className="flex-shrink-0 mt-0.5">
-                <div className="w-5 h-5 bg-teal-500 rounded-full flex items-center justify-center">
+                <div className="w-6 h-6 rounded-full flex items-center justify-center" style={{ backgroundColor: '#26A69A' }}>
                   <span className="text-white text-xs">💡</span>
                 </div>
               </div>
-              <div className="text-sm text-teal-700">
+              <div className="text-sm" style={{ color: '#37474F', fontFamily: 'Inter, sans-serif' }}>
                 <p className="font-medium mb-1">New to PetPal?</p>
                 <p>Just enter your email and we'll help you create your pet's profile!</p>
               </div>
@@ -188,35 +212,36 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
 
         {/* Features Preview */}
         <div className="grid grid-cols-2 gap-4 mb-8 max-w-md mx-auto">
-          <div className="bg-pink-100 rounded-lg p-4 text-center">
+          <div className="glassmorphic-feature-card p-4 text-center">
             <div className="text-2xl mb-2">🏥</div>
-            <p className="text-sm font-medium text-gray-700">Find Vets</p>
+            <p className="text-sm font-medium" style={{ color: '#37474F', fontFamily: 'Inter, sans-serif' }}>Find Vets</p>
           </div>
-          <div className="bg-yellow-100 rounded-lg p-4 text-center">
+          <div className="glassmorphic-feature-card p-4 text-center">
             <div className="text-2xl mb-2">💡</div>
-            <p className="text-sm font-medium text-gray-700">AI Care Tips</p>
+            <p className="text-sm font-medium" style={{ color: '#37474F', fontFamily: 'Inter, sans-serif' }}>AI Care Tips</p>
           </div>
-          <div className="bg-teal-100 rounded-lg p-4 text-center">
+          <div className="glassmorphic-feature-card p-4 text-center">
             <div className="text-2xl mb-2">📊</div>
-            <p className="text-sm font-medium text-gray-700">Health Tracker</p>
+            <p className="text-sm font-medium" style={{ color: '#37474F', fontFamily: 'Inter, sans-serif' }}>Health Tracker</p>
           </div>
-          <div className="bg-green-100 rounded-lg p-4 text-center">
+          <div className="glassmorphic-feature-card p-4 text-center">
             <div className="text-2xl mb-2">🔔</div>
-            <p className="text-sm font-medium text-gray-700">Reminders</p>
+            <p className="text-sm font-medium" style={{ color: '#37474F', fontFamily: 'Inter, sans-serif' }}>Reminders</p>
           </div>
         </div>
 
-        {/* Footer */}
+        {/* Glassmorphic Footer */}
         <footer className="text-center pt-8">
           <a
             href="https://bolt.new"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center space-x-2 text-gray-500 hover:text-teal-500 transition-colors duration-200 text-sm"
+            className="glassmorphic-badge inline-flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-300 hover:scale-105"
+            style={{ fontFamily: 'Inter, sans-serif' }}
           >
-            <span>Built with</span>
-            <span className="font-semibold">Bolt.new</span>
-            <span className="text-xs bg-teal-100 text-teal-700 px-2 py-1 rounded-full">+ Voice AI</span>
+            <span style={{ color: '#546E7A' }}>Built with</span>
+            <span className="font-semibold" style={{ color: '#26A69A' }}>Bolt.new</span>
+            <span className="text-xs px-2 py-1 rounded-full" style={{ backgroundColor: '#26A69A', color: 'white' }}>+ Voice AI</span>
           </a>
         </footer>
       </div>
