@@ -17,7 +17,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ currentScreen, onNa
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-40">
+    <nav className="fixed bottom-0 left-0 right-0 glassmorphic-card border-t shadow-lg z-40" style={{ borderColor: 'rgba(38, 166, 154, 0.3)' }}>
       <div className="w-full max-w-4xl mx-auto px-2 py-2">
         <div className="flex justify-around items-center">
           {navItems.map(({ id, icon: Icon, label }) => (
@@ -26,9 +26,13 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ currentScreen, onNa
               onClick={() => onNavigate(id)}
               className={`flex flex-col items-center space-y-1 px-2 py-2 rounded-lg transition-all duration-300 min-w-0 flex-1 ${
                 currentScreen === id
-                  ? 'bg-teal-100 text-teal-600 scale-105'
-                  : 'text-gray-500 hover:text-teal-500 hover:bg-gray-50'
+                  ? 'scale-105'
+                  : 'hover:scale-105 hover:bg-white hover:bg-opacity-20'
               }`}
+              style={{
+                backgroundColor: currentScreen === id ? 'rgba(38, 166, 154, 0.2)' : 'transparent',
+                color: currentScreen === id ? '#26A69A' : '#546E7A'
+              }}
             >
               <Icon 
                 size={20} 
@@ -37,7 +41,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ currentScreen, onNa
                 }`} 
               />
               <span className={`text-xs font-medium transition-all duration-300 ${
-                currentScreen === id ? 'text-teal-600' : 'text-gray-500'
+                currentScreen === id ? 'font-semibold' : ''
               }`}>
                 {label}
               </span>

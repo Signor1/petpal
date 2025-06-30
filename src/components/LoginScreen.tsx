@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Heart, Mail, LogIn } from 'lucide-react';
+import { Heart, Mail, LogIn, AlertTriangle } from 'lucide-react';
 
 interface LoginScreenProps {
   onLogin: (email: string, isNewUser: boolean) => void;
@@ -17,7 +17,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
     }
 
     if (!isValidEmail(email)) {
-      setError('Please enter a valid email address');
+      setError('Enter a valid email!');
       return;
     }
 
@@ -56,7 +56,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
   const isFormValid = email.trim() && isValidEmail(email);
 
   return (
-    <div className="min-h-screen bg-cream relative overflow-hidden" style={{ backgroundColor: '#F5F5F5' }}>
+    <div className="min-h-screen relative overflow-hidden" style={{ backgroundColor: '#F5F5F5' }}>
       {/* Animated Paw Trail Background */}
       <div className="fixed inset-0 pointer-events-none z-10">
         {Array.from({ length: 15 }, (_, i) => (
@@ -161,7 +161,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
               {error && (
                 <div className="mt-3 p-3 glassmorphic-error rounded-lg animate-fade-in">
                   <p className="text-sm flex items-center space-x-2" style={{ color: '#D32F2F', fontFamily: 'Inter, sans-serif' }}>
-                    <span>⚠️</span>
+                    <AlertTriangle size={16} />
                     <span>{error}</span>
                   </p>
                 </div>
