@@ -22,6 +22,12 @@ interface PetData {
   healthConditions: string;
 }
 
+interface UserRemindersData {
+  email: string;
+  reminders: Reminder[];
+  points: number;
+}
+
 const Reminders: React.FC<RemindersProps> = ({ onBack, onPawPointsUpdate }) => {
   const [reminders, setReminders] = useState<Reminder[]>([]);
   const [formData, setFormData] = useState({
@@ -32,41 +38,103 @@ const Reminders: React.FC<RemindersProps> = ({ onBack, onPawPointsUpdate }) => {
   const [showConfetti, setShowConfetti] = useState(false);
   const [completedTask, setCompletedTask] = useState('');
   const [petData, setPetData] = useState<PetData | null>(null);
+  const [currentUser, setCurrentUser] = useState<string | null>(null);
+  const [userPoints, setUserPoints] = useState(0);
 
   // Load data on component mount
   useEffect(() => {
-    // Load pet data
-    const savedPetData = localStorage.getItem('petpal-profile');
-    if (savedPetData) {
-      setPetData(JSON.parse(savedPetData));
-    }
-
-    // Load reminders or create sample data
-    const savedReminders = localStorage.getItem('petpal-reminders');
-    if (savedReminders) {
-      setReminders(JSON.parse(savedReminders));
-    } else {
-      // Create sample reminders
-      const sampleReminders: Reminder[] = [
-        {
-          id: '1',
-          task: 'Feed morning meal',
-          time: '08:00',
-          completed: false,
-          createdAt: Date.now() - 86400000
-        },
-        {
-          id: '2',
-          task: 'Evening walk',
-          time: '18:30',
-          completed: false,
-          createdAt: Date.now() - 43200000
+    // Get current user email
+    const userEmail = localStorage.getItem('petpal-current-user');
+    if (userEmail) {
+      setCurrentUser(userEmail);
+      
+      // Load pet data for this user
+      const userProfileKey = `petpal-profile-${userEmail.toLowerCase()}`;
+      const savedPetData = localStorage.getItem(userProfileKey);
+      if (savedPetData) {
+        try {
+          const profileData = JSON.parse(savedPetData);
+          if (profileData.pet) {
+            setPetData({
+              name: profileData.pet.name || '',
+              breed: profileData.pet.breed || '',
+              age: profileData.pet.age ? profileData.pet.age.toString() : '',
+              healthConditions: profileData.pet.health || ''
+            });
+          }
+        } catch (error) {
+          console.error('Error loading pet profile:', error);
         }
-      ];
-      setReminders(sampleReminders);
-      localStorage.setItem('petpal-reminders', JSON.stringify(sampleReminders));
+      }
+
+      // Load reminders and points for this user
+      const userRemindersKey = `petpal-reminders-${userEmail.toLowerCase()}`;
+      const savedRemindersData = localStorage.getItem(userRemindersKey);
+      if (savedRemindersData) {
+        try {
+          const remindersData: UserRemindersData = JSON.parse(savedRemindersData);
+          if (remindersData.reminders && Array.isArray(remindersData.reminders)) {
+            setReminders(remindersData.reminders);
+          }
+          if (typeof remindersData.points === 'number') {
+            setUserPoints(remindersData.points);
+          }
+        } catch (error) {
+          console.error('Error loading reminders data:', error);
+          // Create empty reminders structure
+          const emptyReminders: UserRemindersData = {
+            email: userEmail,
+            reminders: [],
+            points: 0
+          };
+          localStorage.setItem(userRemindersKey, JSON.stringify(emptyReminders));
+          setReminders([]);
+          setUserPoints(0);
+        }
+      } else {
+        // Create sample reminders for new users
+        const sampleReminders: Reminder[] = [
+          {
+            id: '1',
+            task: petData?.name ? `Feed ${petData.name} morning meal` : 'Feed morning meal',
+            time: '08:00',
+            completed: false,
+            createdAt: Date.now() - 86400000
+          },
+          {
+            id: '2',
+            task: petData?.name ? `Evening walk with ${petData.name}` : 'Evening walk',
+            time: '18:30',
+            completed: false,
+            createdAt: Date.now() - 43200000
+          }
+        ];
+        
+        const initialReminders: UserRemindersData = {
+          email: userEmail,
+          reminders: sampleReminders,
+          points: 0
+        };
+        
+        localStorage.setItem(userRemindersKey, JSON.stringify(initialReminders));
+        setReminders(sampleReminders);
+        setUserPoints(0);
+      }
     }
-  }, []);
+  }, [petData?.name]);
+
+  // Save reminders and points to localStorage
+  const saveRemindersData = (updatedReminders: Reminder[], updatedPoints: number) => {
+    if (!currentUser) return;
+
+    const userRemindersKey = `petpal-reminders-${currentUser.toLowerCase()}`;
+    const remindersData: UserRemindersData = {
+      email: currentUser,
+      reminders: updatedReminders,
+      points: updatedPoints
+    };
+    localStorage.setItem(userRemindersKey, JSON.stringify(remindersData));
+  };
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({
@@ -76,7 +144,7 @@ const Reminders: React.FC<RemindersProps> = ({ onBack, onPawPointsUpdate }) => {
   };
 
   const handleSetReminder = () => {
-    if (!formData.task.trim() || !formData.time) return;
+    if (!formData.task.trim() || !formData.time || !currentUser) return;
 
     const newReminder: Reminder = {
       id: Date.now().toString(),
@@ -88,7 +156,7 @@ const Reminders: React.FC<RemindersProps> = ({ onBack, onPawPointsUpdate }) => {
 
     const updatedReminders = [newReminder, ...reminders];
     setReminders(updatedReminders);
-    localStorage.setItem('petpal-reminders', JSON.stringify(updatedReminders));
+    saveRemindersData(updatedReminders, userPoints);
 
     // Show success message
     setShowSuccess(true);
@@ -112,10 +180,13 @@ const Reminders: React.FC<RemindersProps> = ({ onBack, onPawPointsUpdate }) => {
       reminder.id === id ? { ...reminder, completed: true } : reminder
     );
     
+    // Add 10 Paw Points
+    const newPoints = userPoints + 10;
+    setUserPoints(newPoints);
     setReminders(updatedReminders);
-    localStorage.setItem('petpal-reminders', JSON.stringify(updatedReminders));
+    saveRemindersData(updatedReminders, newPoints);
 
-    // Award Paw Points
+    // Update global Paw Points counter
     onPawPointsUpdate(10);
 
     // Show confetti and success message
@@ -137,7 +208,7 @@ const Reminders: React.FC<RemindersProps> = ({ onBack, onPawPointsUpdate }) => {
   const handleDeleteReminder = (id: string) => {
     const updatedReminders = reminders.filter(reminder => reminder.id !== id);
     setReminders(updatedReminders);
-    localStorage.setItem('petpal-reminders', JSON.stringify(updatedReminders));
+    saveRemindersData(updatedReminders, userPoints);
   };
 
   const formatTime = (time: string) => {
@@ -172,6 +243,8 @@ const Reminders: React.FC<RemindersProps> = ({ onBack, onPawPointsUpdate }) => {
         task.replace(/Feed/g, `Feed ${petData.name}`)
              .replace(/walk/g, `walk with ${petData.name}`)
              .replace(/Brush teeth/g, `Brush ${petData.name}'s teeth`)
+             .replace(/Playtime/g, `Playtime with ${petData.name}`)
+             .replace(/Grooming session/g, `Grooming session for ${petData.name}`)
       );
     }
 
@@ -196,7 +269,12 @@ const Reminders: React.FC<RemindersProps> = ({ onBack, onPawPointsUpdate }) => {
             <div className="animate-bounce">
               <Bell size={32} className="text-teal-500" />
             </div>
-            <h1 className="text-3xl font-bold text-teal-500">Reminders</h1>
+            <div>
+              <h1 className="text-3xl font-bold text-teal-500">Reminders</h1>
+              {currentUser && petData?.name && (
+                <p className="text-sm text-gray-600">Managing {petData.name}'s care schedule</p>
+              )}
+            </div>
           </div>
         </header>
 
@@ -207,6 +285,27 @@ const Reminders: React.FC<RemindersProps> = ({ onBack, onPawPointsUpdate }) => {
               <CheckCircle size={24} className="text-green-600" />
             </div>
             <span className="text-green-800 font-medium">{completedTask}</span>
+          </div>
+        )}
+
+        {/* User Points Display */}
+        {currentUser && (
+          <div className="mb-6 p-4 bg-yellow-100 border border-yellow-300 rounded-lg max-w-2xl mx-auto">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-yellow-400 rounded-full flex items-center justify-center">
+                  <span className="text-xl">🏆</span>
+                </div>
+                <div>
+                  <p className="text-yellow-800 font-semibold">Your Paw Points</p>
+                  <p className="text-yellow-700 text-sm">{currentUser}</p>
+                </div>
+              </div>
+              <div className="text-right">
+                <p className="text-2xl font-bold text-yellow-800">{userPoints}</p>
+                <p className="text-yellow-700 text-xs">Points Earned</p>
+              </div>
+            </div>
           </div>
         )}
 
@@ -230,7 +329,7 @@ const Reminders: React.FC<RemindersProps> = ({ onBack, onPawPointsUpdate }) => {
                 value={formData.task}
                 onChange={(e) => handleInputChange('task', e.target.value)}
                 className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-teal-400 focus:ring-2 focus:ring-teal-200 focus:ring-opacity-50 transition-all duration-200 text-gray-800 placeholder-gray-400"
-                placeholder="e.g., Feed Rover, Walk the dog, Give medication..."
+                placeholder={petData?.name ? `e.g., Feed ${petData.name}, Walk ${petData.name}, Give medication...` : "e.g., Feed pet, Walk the dog, Give medication..."}
                 required
               />
               
@@ -271,7 +370,7 @@ const Reminders: React.FC<RemindersProps> = ({ onBack, onPawPointsUpdate }) => {
             <button
               onClick={handleSetReminder}
               disabled={!isFormValid}
-              className={`w-full py-4 px-6 rounded-lg font-semibold text-white transition-all duration-300 flex items-center justify-center space-x-2 ${
+              className={`w-full py-4 px-6 rounded-lg font-semibold text-gray-800 transition-all duration-300 flex items-center justify-center space-x-2 ${
                 isFormValid
                   ? 'bg-pink-300 hover:bg-pink-400 hover:scale-105 shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-pink-400 focus:ring-opacity-50'
                   : 'bg-gray-300 cursor-not-allowed'
@@ -370,10 +469,17 @@ const Reminders: React.FC<RemindersProps> = ({ onBack, onPawPointsUpdate }) => {
 
         {/* Empty State */}
         {reminders.length === 0 && (
-          <div className="text-center py-12">
+          <div className="text-center py-12 max-w-2xl mx-auto">
             <Bell size={64} className="mx-auto mb-4 text-gray-300" />
             <h3 className="text-xl font-semibold text-gray-600 mb-2">No Reminders Yet</h3>
-            <p className="text-gray-500 mb-6">Set your first reminder to start earning Paw Points!</p>
+            <p className="text-gray-500 mb-6">
+              Set your first reminder to start earning Paw Points and keep {petData?.name || 'your pet'} healthy!
+            </p>
+            <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+              <p className="text-yellow-800 font-medium text-sm">
+                💡 Each completed reminder earns you 10 Paw Points!
+              </p>
+            </div>
           </div>
         )}
 
@@ -394,7 +500,7 @@ const Reminders: React.FC<RemindersProps> = ({ onBack, onPawPointsUpdate }) => {
             </div>
             <div className="flex items-start space-x-3">
               <div className="w-2 h-2 bg-teal-500 rounded-full mt-2 flex-shrink-0"></div>
-              <p>Use specific task names like "Feed Rover" instead of just "Feed"</p>
+              <p>Use specific task names like "Feed {petData?.name || 'Rover'}" instead of just "Feed"</p>
             </div>
             <div className="flex items-start space-x-3">
               <div className="w-2 h-2 bg-teal-500 rounded-full mt-2 flex-shrink-0"></div>
@@ -402,6 +508,25 @@ const Reminders: React.FC<RemindersProps> = ({ onBack, onPawPointsUpdate }) => {
             </div>
           </div>
         </div>
+
+        {/* User Context Info */}
+        {currentUser && (
+          <div className="mt-6 p-4 bg-teal-50 border border-teal-200 rounded-lg max-w-2xl mx-auto">
+            <div className="flex items-center space-x-3">
+              <div className="w-8 h-8 bg-teal-500 rounded-full flex items-center justify-center">
+                <span className="text-white text-sm">👤</span>
+              </div>
+              <div>
+                <p className="text-teal-800 font-medium text-sm">
+                  Reminders for {currentUser}
+                </p>
+                <p className="text-teal-700 text-xs">
+                  All reminders and points are securely stored and linked to your account
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Paw Points Info */}
         <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg max-w-2xl mx-auto">
@@ -412,6 +537,9 @@ const Reminders: React.FC<RemindersProps> = ({ onBack, onPawPointsUpdate }) => {
             <div>
               <p className="text-yellow-800 font-medium text-sm">
                 Complete reminders to earn Paw Points and show your dedication to pet care!
+              </p>
+              <p className="text-yellow-700 text-xs mt-1">
+                Your points sync with the Home Screen counter automatically
               </p>
             </div>
           </div>
