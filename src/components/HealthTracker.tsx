@@ -21,6 +21,11 @@ interface PetData {
   healthConditions: string;
 }
 
+interface UserHealthLogs {
+  email: string;
+  logs: HealthEntry[];
+}
+
 const HealthTracker: React.FC<HealthTrackerProps> = ({ onBack }) => {
   const [entries, setEntries] = useState<HealthEntry[]>([]);
   const [formData, setFormData] = useState({
@@ -32,6 +37,7 @@ const HealthTracker: React.FC<HealthTrackerProps> = ({ onBack }) => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
   const [petData, setPetData] = useState<PetData | null>(null);
+  const [currentUser, setCurrentUser] = useState<string | null>(null);
 
   // AI suggestion database
   const aiSuggestions = {
@@ -63,43 +69,76 @@ const HealthTracker: React.FC<HealthTrackerProps> = ({ onBack }) => {
 
   // Load data on component mount
   useEffect(() => {
-    // Load pet data
-    const savedPetData = localStorage.getItem('petpal-profile');
-    if (savedPetData) {
-      setPetData(JSON.parse(savedPetData));
-    }
-
-    // Load health entries or create sample data
-    const savedEntries = localStorage.getItem('petpal-health-entries');
-    if (savedEntries) {
-      setEntries(JSON.parse(savedEntries));
-    } else {
-      // Create sample entries
-      const sampleEntries: HealthEntry[] = [
-        {
-          id: '1',
-          date: '2024-01-15',
-          symptom: 'Slight limping on left paw',
-          weight: '45',
-          timestamp: Date.now() - 86400000 * 7
-        },
-        {
-          id: '2',
-          date: '2024-01-10',
-          symptom: 'Normal checkup - all good!',
-          weight: '44.5',
-          timestamp: Date.now() - 86400000 * 12
-        },
-        {
-          id: '3',
-          date: '2024-01-05',
-          symptom: 'Mild coughing after walks',
-          weight: '44',
-          timestamp: Date.now() - 86400000 * 17
+    // Get current user email
+    const userEmail = localStorage.getItem('petpal-current-user');
+    if (userEmail) {
+      setCurrentUser(userEmail);
+      
+      // Load pet data for this user
+      const userProfileKey = `petpal-profile-${userEmail.toLowerCase()}`;
+      const savedPetData = localStorage.getItem(userProfileKey);
+      if (savedPetData) {
+        try {
+          const profileData = JSON.parse(savedPetData);
+          if (profileData.pet) {
+            setPetData({
+              name: profileData.pet.name || '',
+              breed: profileData.pet.breed || '',
+              age: profileData.pet.age ? profileData.pet.age.toString() : '',
+              healthConditions: profileData.pet.health || ''
+            });
+          }
+        } catch (error) {
+          console.error('Error loading pet profile:', error);
         }
-      ];
-      setEntries(sampleEntries);
-      localStorage.setItem('petpal-health-entries', JSON.stringify(sampleEntries));
+      }
+
+      // Load health entries for this user
+      const userHealthKey = `petpal-health-${userEmail.toLowerCase()}`;
+      const savedHealthLogs = localStorage.getItem(userHealthKey);
+      if (savedHealthLogs) {
+        try {
+          const healthData: UserHealthLogs = JSON.parse(savedHealthLogs);
+          if (healthData.logs && Array.isArray(healthData.logs)) {
+            setEntries(healthData.logs);
+          }
+        } catch (error) {
+          console.error('Error loading health logs:', error);
+          // Create empty logs structure
+          const emptyLogs: UserHealthLogs = {
+            email: userEmail,
+            logs: []
+          };
+          localStorage.setItem(userHealthKey, JSON.stringify(emptyLogs));
+          setEntries([]);
+        }
+      } else {
+        // Create sample entries for new users
+        const sampleEntries: HealthEntry[] = [
+          {
+            id: '1',
+            date: '2024-01-15',
+            symptom: 'Slight limping on left paw',
+            weight: '45',
+            timestamp: Date.now() - 86400000 * 7
+          },
+          {
+            id: '2',
+            date: '2024-01-10',
+            symptom: 'Normal checkup - all good!',
+            weight: '44.5',
+            timestamp: Date.now() - 86400000 * 12
+          }
+        ];
+        
+        const initialLogs: UserHealthLogs = {
+          email: userEmail,
+          logs: sampleEntries
+        };
+        
+        localStorage.setItem(userHealthKey, JSON.stringify(initialLogs));
+        setEntries(sampleEntries);
+      }
     }
   }, []);
 
@@ -155,7 +194,7 @@ const HealthTracker: React.FC<HealthTrackerProps> = ({ onBack }) => {
   };
 
   const handleLogEntry = () => {
-    if (!formData.symptom.trim()) return;
+    if (!formData.symptom.trim() || !currentUser) return;
 
     const newEntry: HealthEntry = {
       id: Date.now().toString(),
@@ -167,7 +206,14 @@ const HealthTracker: React.FC<HealthTrackerProps> = ({ onBack }) => {
 
     const updatedEntries = [newEntry, ...entries];
     setEntries(updatedEntries);
-    localStorage.setItem('petpal-health-entries', JSON.stringify(updatedEntries));
+
+    // Save to localStorage with email-based key
+    const userHealthKey = `petpal-health-${currentUser.toLowerCase()}`;
+    const healthData: UserHealthLogs = {
+      email: currentUser,
+      logs: updatedEntries
+    };
+    localStorage.setItem(userHealthKey, JSON.stringify(healthData));
 
     // Generate final AI suggestion
     const suggestion = generateAISuggestion(formData.symptom, formData.weight);
@@ -223,14 +269,19 @@ const HealthTracker: React.FC<HealthTrackerProps> = ({ onBack }) => {
             <div className="animate-bounce">
               <Stethoscope size={32} className="text-teal-500" />
             </div>
-            <h1 className="text-3xl font-bold text-teal-500">Health Tracker</h1>
+            <div>
+              <h1 className="text-3xl font-bold text-teal-500">Health Tracker</h1>
+              {currentUser && petData?.name && (
+                <p className="text-sm text-gray-600">Tracking {petData.name}'s health</p>
+              )}
+            </div>
           </div>
         </header>
 
         {/* Success Message */}
         {showSuccess && (
           <div className="mb-6 p-4 bg-green-100 border border-green-300 rounded-lg flex items-center space-x-3 animate-fade-in max-w-2xl mx-auto">
-            <div className="animate-pulse">
+            <div className="animate-heart-beat">
               <Heart size={24} className="text-green-600" />
             </div>
             <span className="text-green-800 font-medium">Health entry logged successfully!</span>
@@ -300,7 +351,7 @@ const HealthTracker: React.FC<HealthTrackerProps> = ({ onBack }) => {
             <button
               onClick={handleLogEntry}
               disabled={!isFormValid}
-              className={`w-full py-4 px-6 rounded-lg font-semibold text-white transition-all duration-300 flex items-center justify-center space-x-2 ${
+              className={`w-full py-4 px-6 rounded-lg font-semibold text-gray-800 transition-all duration-300 flex items-center justify-center space-x-2 ${
                 isFormValid
                   ? 'bg-pink-300 hover:bg-pink-400 hover:scale-105 shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-pink-400 focus:ring-opacity-50'
                   : 'bg-gray-300 cursor-not-allowed'
@@ -333,23 +384,27 @@ const HealthTracker: React.FC<HealthTrackerProps> = ({ onBack }) => {
           <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center space-x-2">
             <Heart size={20} className="text-pink-500" />
             <span>Health History</span>
+            {currentUser && (
+              <span className="text-sm text-gray-500 font-normal">({entries.length} entries)</span>
+            )}
           </h2>
 
           {entries.length === 0 ? (
             <div className="text-center py-8 text-gray-500">
               <Stethoscope size={48} className="mx-auto mb-4 opacity-50" />
-              <p>No health entries yet. Log your first entry above!</p>
+              <p className="text-lg font-medium mb-2">No health entries yet</p>
+              <p className="text-sm">Log your first entry above to start tracking {petData?.name || 'your pet'}'s health!</p>
             </div>
           ) : (
             <div className="space-y-4 max-h-96 overflow-y-auto">
               {entries.map((entry) => (
-                <div key={entry.id} className="bg-yellow-400 rounded-lg p-4 shadow-md">
+                <div key={entry.id} className="bg-yellow-400 rounded-lg p-4 shadow-md hover:shadow-lg transition-all duration-300">
                   <div className="flex justify-between items-start mb-2">
                     <span className="text-sm font-semibold text-gray-800">
                       {formatDate(entry.date)}
                     </span>
                     {entry.weight !== 'Not recorded' && (
-                      <span className="text-sm text-gray-700 bg-yellow-300 px-2 py-1 rounded-full">
+                      <span className="text-sm text-gray-700 bg-yellow-300 px-2 py-1 rounded-full font-medium">
                         {entry.weight} lbs
                       </span>
                     )}
@@ -360,6 +415,25 @@ const HealthTracker: React.FC<HealthTrackerProps> = ({ onBack }) => {
             </div>
           )}
         </div>
+
+        {/* User Context Info */}
+        {currentUser && (
+          <div className="mt-6 p-4 bg-teal-50 border border-teal-200 rounded-lg max-w-2xl mx-auto">
+            <div className="flex items-center space-x-3">
+              <div className="w-8 h-8 bg-teal-500 rounded-full flex items-center justify-center">
+                <span className="text-white text-sm">👤</span>
+              </div>
+              <div>
+                <p className="text-teal-800 font-medium text-sm">
+                  Health logs for {currentUser}
+                </p>
+                <p className="text-teal-700 text-xs">
+                  All entries are securely stored and linked to your account
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Info Section */}
         <div className="mt-6 p-4 bg-gray-100 rounded-lg max-w-2xl mx-auto">
