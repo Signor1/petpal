@@ -253,5 +253,3 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
 };
 
 export default LoginScreen;
-
-export default LoginScreen
