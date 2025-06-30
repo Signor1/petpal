@@ -241,7 +241,7 @@ function App() {
       default:
         return (
           <ScreenTransition isVisible={!isTransitioning}>
-            <div className="min-h-screen bg-gray-50 pb-20" style={{ fontFamily: 'Poppins, sans-serif' }}>
+            <div className="min-h-screen pb-20" style={{ backgroundColor: '#F5F5F5', fontFamily: 'Poppins, sans-serif' }}>
               <ConfettiAnimation />
               
               {/* Main Content Container */}
@@ -255,7 +255,8 @@ function App() {
                     </div>
                     <button
                       onClick={handleLogout}
-                      className="bg-teal-500 hover:bg-teal-600 text-white px-4 py-2 rounded-full transition-all duration-200 flex items-center space-x-2 text-sm font-medium hover:scale-105 focus:outline-none focus:ring-2 focus:ring-teal-400 focus:ring-opacity-50"
+                      className="glassmorphic-button px-4 py-2 rounded-full transition-all duration-200 flex items-center space-x-2 text-sm font-medium hover:scale-105 focus:outline-none focus:ring-2 focus:ring-teal-400 focus:ring-opacity-50"
+                      style={{ color: 'white' }}
                       title="Log out of PetPal"
                     >
                       <LogOut size={16} />
@@ -269,9 +270,9 @@ function App() {
                       <p className="text-gray-500 text-sm mb-2">Welcome back, {currentUser}!</p>
                     )}
                     {petData?.name && (
-                      <div className="bg-pink-100 border border-pink-200 rounded-lg p-3 max-w-md mx-auto">
-                        <p className="text-pink-800 font-medium text-sm flex items-center justify-center space-x-2">
-                          <Heart size={16} className="text-pink-500" />
+                      <div className="glassmorphic-card p-3 max-w-md mx-auto" style={{ backgroundColor: 'rgba(255, 111, 97, 0.2)' }}>
+                        <p className="font-medium text-sm flex items-center justify-center space-x-2" style={{ color: '#37474F' }}>
+                          <Heart size={16} style={{ color: '#FF6F61' }} />
                           <span>Caring for {petData.name} ({petData.breed})</span>
                         </p>
                       </div>
@@ -283,11 +284,11 @@ function App() {
                 <div className="text-center mb-8">
                   <PetAvatar onClick={handleAvatarClick} />
                   {showProfile && (
-                    <div className="mt-4 p-4 bg-white rounded-lg shadow-md animate-fade-in max-w-md mx-auto">
-                      <h3 className="font-semibold text-gray-800 mb-2">
+                    <div className="mt-4 glassmorphic-card p-4 animate-fade-in max-w-md mx-auto">
+                      <h3 className="font-semibold mb-2" style={{ color: '#37474F' }}>
                         {petData?.name ? `Meet ${petData.name}!` : 'Meet Buddy!'}
                       </h3>
-                      <p className="text-gray-600 text-sm mb-3">
+                      <p className="text-sm mb-3" style={{ color: '#546E7A' }}>
                         {petData?.name 
                           ? `${petData.name} is a ${petData.age} year old ${petData.breed} who loves your care and attention!`
                           : 'Your virtual pet companion is always here to help you care for your furry friends.'
@@ -295,7 +296,8 @@ function App() {
                       </p>
                       <button
                         onClick={() => handleActionClick('Pet Profile')}
-                        className="text-teal-500 hover:text-teal-600 font-medium text-sm underline transition-colors duration-200"
+                        className="text-sm underline transition-colors duration-200"
+                        style={{ color: '#26A69A' }}
                       >
                         {petData?.name ? `Update ${petData.name}'s Profile` : 'Create Pet Profile'} →
                       </button>
@@ -307,7 +309,7 @@ function App() {
                 <div className="text-center mb-8">
                   <PawPoints points={pawPoints} />
                   {pawPoints > 0 && (
-                    <p className="text-gray-500 text-xs mt-2">
+                    <p className="text-xs mt-2" style={{ color: '#546E7A' }}>
                       🏆 You've earned {pawPoints} points by caring for {petData?.name || 'your pet'}!
                     </p>
                   )}
@@ -339,23 +341,23 @@ function App() {
 
                 {/* Quick Stats */}
                 {petData && (
-                  <div className="bg-white rounded-xl shadow-md p-6 mb-8 max-w-2xl mx-auto">
-                    <h3 className="font-semibold text-gray-800 mb-4 text-center">
+                  <div className="glassmorphic-card p-6 mb-8 max-w-2xl mx-auto">
+                    <h3 className="font-semibold mb-4 text-center" style={{ color: '#37474F', fontFamily: 'Inter, sans-serif' }}>
                       {petData.name}'s Quick Info
                     </h3>
                     <div className="grid grid-cols-2 gap-4">
-                      <div className="text-center p-3 bg-yellow-50 rounded-lg">
+                      <div className="text-center p-3 rounded-lg" style={{ backgroundColor: 'rgba(255, 213, 79, 0.3)' }}>
                         <div className="text-2xl mb-1">🎂</div>
-                        <p className="text-sm font-medium text-gray-700">{petData.age} years old</p>
+                        <p className="text-sm font-medium" style={{ color: '#37474F' }}>{petData.age} years old</p>
                       </div>
-                      <div className="text-center p-3 bg-teal-50 rounded-lg">
+                      <div className="text-center p-3 rounded-lg" style={{ backgroundColor: 'rgba(38, 166, 154, 0.3)' }}>
                         <div className="text-2xl mb-1">🐕</div>
-                        <p className="text-sm font-medium text-gray-700">{petData.breed}</p>
+                        <p className="text-sm font-medium" style={{ color: '#37474F' }}>{petData.breed}</p>
                       </div>
                     </div>
                     {petData.health && petData.health !== 'None' && (
-                      <div className="mt-4 p-3 bg-pink-50 border border-pink-200 rounded-lg">
-                        <p className="text-pink-800 text-sm">
+                      <div className="mt-4 p-3 rounded-lg" style={{ backgroundColor: 'rgba(255, 111, 97, 0.2)' }}>
+                        <p className="text-sm" style={{ color: '#37474F' }}>
                           <strong>Health Notes:</strong> {petData.health}
                         </p>
                       </div>
@@ -365,18 +367,19 @@ function App() {
 
                 {/* No Profile Warning */}
                 {!petData && (
-                  <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-6 mb-8 max-w-2xl mx-auto">
+                  <div className="glassmorphic-card p-6 mb-8 max-w-2xl mx-auto" style={{ backgroundColor: 'rgba(255, 213, 79, 0.2)' }}>
                     <div className="text-center">
-                      <div className="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                        <Heart size={24} className="text-yellow-600" />
+                      <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3" style={{ backgroundColor: 'rgba(255, 213, 79, 0.5)' }}>
+                        <Heart size={24} style={{ color: '#FFD54F' }} />
                       </div>
-                      <h3 className="font-semibold text-yellow-800 mb-2">Create Your Pet's Profile</h3>
-                      <p className="text-yellow-700 text-sm mb-4">
+                      <h3 className="font-semibold mb-2" style={{ color: '#37474F' }}>Create Your Pet's Profile</h3>
+                      <p className="text-sm mb-4" style={{ color: '#546E7A' }}>
                         Get personalized care tips and recommendations by creating a profile for your furry friend!
                       </p>
                       <button
                         onClick={() => handleActionClick('Pet Profile')}
-                        className="bg-yellow-400 hover:bg-yellow-500 text-gray-800 px-6 py-3 rounded-lg font-semibold transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-opacity-50"
+                        className="glassmorphic-button px-6 py-3 rounded-lg font-semibold transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-opacity-50"
+                        style={{ color: 'white' }}
                       >
                         Create Profile Now
                       </button>
@@ -384,17 +387,18 @@ function App() {
                   </div>
                 )}
 
-                {/* Footer */}
+                {/* Glassmorphic Footer */}
                 <footer className="text-center pt-8 border-t border-gray-200">
                   <a
                     href="https://bolt.new"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center space-x-2 text-gray-500 hover:text-teal-500 transition-colors duration-200 text-sm"
+                    className="glassmorphic-badge inline-flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-300 hover:scale-105"
+                    style={{ fontFamily: 'Inter, sans-serif' }}
                   >
-                    <span>Built with</span>
-                    <span className="font-semibold">Bolt.new</span>
-                    <span className="text-xs bg-teal-100 text-teal-700 px-2 py-1 rounded-full">+ Voice AI</span>
+                    <span style={{ color: '#546E7A' }}>Built with</span>
+                    <span className="font-semibold" style={{ color: '#26A69A' }}>Bolt.new</span>
+                    <span className="text-xs px-2 py-1 rounded-full" style={{ backgroundColor: '#26A69A', color: 'white' }}>+ Voice AI</span>
                   </a>
                 </footer>
               </div>
@@ -405,7 +409,7 @@ function App() {
   };
 
   return (
-    <div className="relative min-h-screen bg-gray-50">
+    <div className="relative min-h-screen" style={{ backgroundColor: '#F5F5F5' }}>
       {renderScreen()}
       {isAuthenticated && currentScreen !== 'login' && (
         <BottomNavigation currentScreen={currentScreen} onNavigate={handleNavigate} />

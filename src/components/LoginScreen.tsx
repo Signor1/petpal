@@ -182,12 +182,12 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
               {isLoading ? (
                 <>
                   <div className="w-6 h-6 animate-spin" style={{ color: '#FFD54F' }}>🐾</div>
-                  <span style={{ color: '#37474F' }}>Signing In...</span>
+                  <span style={{ color: 'white' }}>Signing In...</span>
                 </>
               ) : (
                 <>
-                  <LogIn size={20} style={{ color: '#37474F' }} />
-                  <span style={{ color: '#37474F' }}>Log In</span>
+                  <LogIn size={20} style={{ color: 'white' }} />
+                  <span style={{ color: 'white' }}>Log In</span>
                   <div className="text-xl">🐾</div>
                 </>
               )}
