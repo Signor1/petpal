@@ -22,6 +22,11 @@ const CareTips: React.FC<CareTipsProps> = ({ onBack }) => {
   const [currentUtterance, setCurrentUtterance] = useState<SpeechSynthesisUtterance | null>(null);
   const [currentUser, setCurrentUser] = useState<string | null>(null);
 
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   // Mock AI-generated tips database
   const tipCategories = {
     diet: [
@@ -215,8 +220,13 @@ const CareTips: React.FC<CareTipsProps> = ({ onBack }) => {
     window.speechSynthesis.speak(utterance);
   };
 
+  const handleBack = () => {
+    window.scrollTo(0, 0);
+    onBack();
+  };
+
   return (
-    <div className="min-h-screen pb-20 relative overflow-hidden" style={{ backgroundColor: '#F5F5F5' }}>
+    <div className="min-h-screen pb-20 relative overflow-hidden" style={{ backgroundColor: '#FFFFFF' }}>
       {/* Animated Paw Trail Background */}
       <div className="fixed inset-0 pointer-events-none z-10">
         {Array.from({ length: 10 }, (_, i) => (
@@ -231,21 +241,22 @@ const CareTips: React.FC<CareTipsProps> = ({ onBack }) => {
               animationIterationCount: 'infinite',
             }}
           >
-            <div className="w-6 h-6 text-2xl" style={{ color: '#26A69A' }}>🐾</div>
+            <div className="w-6 h-6 text-2xl" style={{ color: '#4A90E2' }}>🐾</div>
           </div>
         ))}
       </div>
 
-      <div className="relative z-20 w-full max-w-4xl mx-auto px-4 py-6">
+      <div className="relative z-20 w-full max-w-6xl mx-auto px-4 py-6">
         {/* Header */}
         <header className="flex items-center mb-8">
           <button
-            onClick={onBack}
-            className="mr-4 p-3 rounded-full transition-all duration-300 hover:scale-110 animate-pulse-on-hover focus:outline-none focus:ring-2 focus:ring-opacity-50"
+            onClick={handleBack}
+            className="mr-4 p-3 transition-all duration-300 hover:scale-110 animate-pulse-on-hover focus:outline-none focus:ring-2 focus:ring-opacity-50"
             style={{ 
-              backgroundColor: '#26A69A',
+              backgroundColor: '#4A90E2',
               color: 'white',
-              boxShadow: '0 4px 16px 0 rgba(38, 166, 154, 0.3)'
+              boxShadow: '0 4px 16px 0 rgba(74, 144, 226, 0.3)',
+              borderRadius: '12px'
             }}
             aria-label="Go back to home screen"
           >
@@ -253,7 +264,7 @@ const CareTips: React.FC<CareTipsProps> = ({ onBack }) => {
           </button>
           <div className="flex items-center space-x-4">
             <div className="animate-bounce-gentle">
-              <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: '#26A69A' }}>
+              <div className="w-12 h-12 flex items-center justify-center" style={{ backgroundColor: '#4A90E2', borderRadius: '12px' }}>
                 <Sparkles size={24} className="text-white" />
               </div>
             </div>
@@ -261,16 +272,15 @@ const CareTips: React.FC<CareTipsProps> = ({ onBack }) => {
               <h1 
                 className="text-4xl font-bold"
                 style={{ 
-                  fontFamily: 'Bubblegum Sans, cursive',
+                  fontFamily: 'Poppins, sans-serif',
                   fontSize: '24px',
-                  color: '#26A69A',
-                  animation: 'zoom 2s ease-in-out infinite alternate'
+                  color: '#333333'
                 }}
               >
                 Daily Care Tips
               </h1>
               {currentUser && petData?.name && (
-                <p className="text-sm mt-1" style={{ color: '#546E7A', fontFamily: 'Inter, sans-serif' }}>
+                <p className="text-sm mt-1" style={{ color: '#666666', fontFamily: 'Poppins, sans-serif' }}>
                   Personalized for {petData.name}
                 </p>
               )}
@@ -278,34 +288,34 @@ const CareTips: React.FC<CareTipsProps> = ({ onBack }) => {
           </div>
         </header>
 
-        {/* Glassmorphic AI Tip Card */}
-        <div className="glassmorphic-card p-6 mb-6 max-w-2xl mx-auto relative overflow-hidden border-coral-glow">
+        {/* AI Tip Card */}
+        <div className="bg-white p-6 mb-6 max-w-4xl mx-auto relative overflow-hidden shadow-lg border border-gray-100" style={{ borderRadius: '12px' }}>
           {/* Wagging tail animation */}
           {showWagTail && (
             <div className="absolute top-4 right-4">
-              <div className="w-8 h-8 rounded-full animate-wag" style={{ backgroundColor: '#FF6F61' }}></div>
+              <div className="w-8 h-8 animate-wag" style={{ backgroundColor: '#F28C38', borderRadius: '12px' }}></div>
             </div>
           )}
 
           <div className="flex items-start space-x-4 mb-4">
             <div className="flex-shrink-0">
-              <div className="glassmorphic-icon w-12 h-12">
-                <Heart size={24} style={{ color: '#FF6F61' }} />
+              <div className="w-12 h-12 flex items-center justify-center" style={{ backgroundColor: '#4A90E220', borderRadius: '12px' }}>
+                <Heart size={24} style={{ color: '#4A90E2' }} />
               </div>
             </div>
             <div className="flex-1">
-              <h2 className="text-lg font-semibold mb-3 flex items-center space-x-2" style={{ color: '#37474F', fontFamily: 'Inter, sans-serif' }}>
+              <h2 className="text-lg font-semibold mb-3 flex items-center space-x-2" style={{ color: '#333333', fontFamily: 'Poppins, sans-serif' }}>
                 <span>💡 AI-Powered Care Tip</span>
               </h2>
               {isRefreshing ? (
                 <div className="flex items-center space-x-3">
-                  <RefreshCw size={20} className="animate-spin" style={{ color: '#546E7A' }} />
-                  <span className="italic" style={{ color: '#546E7A', fontFamily: 'Inter, sans-serif' }}>
+                  <RefreshCw size={20} className="animate-spin" style={{ color: '#666666' }} />
+                  <span className="italic" style={{ color: '#666666', fontFamily: 'Poppins, sans-serif' }}>
                     Generating personalized tip...
                   </span>
                 </div>
               ) : (
-                <p className="leading-relaxed" style={{ color: '#37474F', fontFamily: 'Inter, sans-serif', fontSize: '16px' }}>
+                <p className="leading-relaxed" style={{ color: '#333333', fontFamily: 'Poppins, sans-serif', fontSize: '16px' }}>
                   {currentTip || "Click 'Refresh Tip' to get your first personalized care advice!"}
                 </p>
               )}
@@ -318,7 +328,7 @@ const CareTips: React.FC<CareTipsProps> = ({ onBack }) => {
               <button
                 onClick={handlePlayTip}
                 disabled={!speechSupported}
-                className={`flex items-center space-x-2 px-4 py-3 rounded-lg font-semibold transition-all duration-300 ${
+                className={`flex items-center space-x-2 px-4 py-3 font-semibold transition-all duration-300 ${
                   speechSupported
                     ? isPlaying
                       ? 'hover:scale-105 shadow-lg'
@@ -326,9 +336,10 @@ const CareTips: React.FC<CareTipsProps> = ({ onBack }) => {
                     : 'opacity-50 cursor-not-allowed'
                 } focus:outline-none focus:ring-2 focus:ring-opacity-50`}
                 style={{
-                  backgroundColor: isPlaying ? '#D32F2F' : '#FFD54F',
-                  color: '#37474F',
-                  fontFamily: 'Inter, sans-serif'
+                  backgroundColor: isPlaying ? '#D32F2F' : '#F28C38',
+                  color: '#FFFFFF',
+                  fontFamily: 'Poppins, sans-serif',
+                  borderRadius: '12px'
                 }}
                 title={speechSupported ? (isPlaying ? 'Stop playback' : 'Play tip aloud') : 'Voice not supported in this browser'}
               >
@@ -346,7 +357,7 @@ const CareTips: React.FC<CareTipsProps> = ({ onBack }) => {
               </button>
 
               {speechSupported && (
-                <div className="flex items-center space-x-2" style={{ color: '#546E7A', fontFamily: 'Inter, sans-serif' }}>
+                <div className="flex items-center space-x-2" style={{ color: '#666666', fontFamily: 'Poppins, sans-serif' }}>
                   <Volume2 size={16} />
                   <span className="text-sm">Voice AI Ready</span>
                 </div>
@@ -356,9 +367,9 @@ const CareTips: React.FC<CareTipsProps> = ({ onBack }) => {
 
           {/* Personalization indicator */}
           {petData?.name && (
-            <div className="mt-4 glassmorphic-helper p-3 rounded-lg">
-              <p className="text-sm flex items-center space-x-2" style={{ color: '#37474F', fontFamily: 'Inter, sans-serif' }}>
-                <Sparkles size={16} style={{ color: '#FF6F61' }} />
+            <div className="mt-4 p-3" style={{ backgroundColor: '#4A90E220', borderRadius: '12px' }}>
+              <p className="text-sm flex items-center space-x-2" style={{ color: '#333333', fontFamily: 'Poppins, sans-serif' }}>
+                <Sparkles size={16} style={{ color: '#4A90E2' }} />
                 <span>Personalized for {petData.name} ({petData.breed})</span>
               </p>
             </div>
@@ -366,20 +377,21 @@ const CareTips: React.FC<CareTipsProps> = ({ onBack }) => {
         </div>
 
         {/* Refresh Button */}
-        <div className="flex justify-center mb-8 max-w-2xl mx-auto">
+        <div className="flex justify-center mb-8 max-w-4xl mx-auto">
           <button
             onClick={generateNewTip}
             disabled={isRefreshing}
-            className={`px-8 py-4 rounded-xl font-semibold transition-all duration-300 flex items-center space-x-3 ${
+            className={`px-8 py-4 font-semibold transition-all duration-300 flex items-center space-x-3 ${
               isRefreshing 
                 ? 'opacity-75 cursor-not-allowed' 
                 : 'hover:scale-105 shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-opacity-50'
             }`}
             style={{
-              backgroundColor: '#FFD54F',
-              color: '#37474F',
-              fontFamily: 'Inter, sans-serif',
-              boxShadow: '0 8px 32px 0 rgba(255, 213, 79, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 -1px 0 rgba(0, 0, 0, 0.1)'
+              backgroundColor: '#F28C38',
+              color: '#FFFFFF',
+              fontFamily: 'Poppins, sans-serif',
+              boxShadow: '0 8px 32px 0 rgba(242, 140, 56, 0.4)',
+              borderRadius: '12px'
             }}
           >
             <RefreshCw size={20} className={isRefreshing ? 'animate-spin' : ''} />
@@ -388,27 +400,27 @@ const CareTips: React.FC<CareTipsProps> = ({ onBack }) => {
         </div>
 
         {/* Voice Feature Info */}
-        <div className="glassmorphic-card p-6 mb-6 max-w-2xl mx-auto">
-          <h3 className="font-semibold mb-4 flex items-center space-x-2" style={{ color: '#37474F', fontFamily: 'Inter, sans-serif' }}>
-            <Volume2 size={20} style={{ color: '#26A69A' }} />
+        <div className="bg-white p-6 mb-6 max-w-4xl mx-auto shadow-lg border border-gray-100" style={{ borderRadius: '12px' }}>
+          <h3 className="font-semibold mb-4 flex items-center space-x-2" style={{ color: '#333333', fontFamily: 'Poppins, sans-serif' }}>
+            <Volume2 size={20} style={{ color: '#4A90E2' }} />
             <span>Voice-Guided Tips</span>
           </h3>
-          <div className="space-y-3 text-sm" style={{ color: '#546E7A', fontFamily: 'Inter, sans-serif' }}>
+          <div className="space-y-3 text-sm" style={{ color: '#666666', fontFamily: 'Poppins, sans-serif' }}>
             <div className="flex items-start space-x-3">
-              <div className="w-2 h-2 rounded-full mt-2 flex-shrink-0" style={{ backgroundColor: '#26A69A' }}></div>
+              <div className="w-2 h-2 mt-2 flex-shrink-0" style={{ backgroundColor: '#4A90E2', borderRadius: '12px' }}></div>
               <p>Click "Play Tip" to hear your personalized care advice read aloud</p>
             </div>
             <div className="flex items-start space-x-3">
-              <div className="w-2 h-2 rounded-full mt-2 flex-shrink-0" style={{ backgroundColor: '#26A69A' }}></div>
+              <div className="w-2 h-2 mt-2 flex-shrink-0" style={{ backgroundColor: '#4A90E2', borderRadius: '12px' }}></div>
               <p>Perfect for hands-free learning while caring for your pet</p>
             </div>
             <div className="flex items-start space-x-3">
-              <div className="w-2 h-2 rounded-full mt-2 flex-shrink-0" style={{ backgroundColor: '#26A69A' }}></div>
+              <div className="w-2 h-2 mt-2 flex-shrink-0" style={{ backgroundColor: '#4A90E2', borderRadius: '12px' }}></div>
               <p>Voice playback uses natural, friendly speech patterns</p>
             </div>
             {!speechSupported && (
-              <div className="glassmorphic-error p-3 rounded-lg">
-                <p className="font-medium text-sm" style={{ color: '#D32F2F', fontFamily: 'Inter, sans-serif' }}>
+              <div className="p-3" style={{ backgroundColor: '#D32F2F20', borderRadius: '12px' }}>
+                <p className="font-medium text-sm" style={{ color: '#D32F2F', fontFamily: 'Poppins, sans-serif' }}>
                   🔊 For voice features, please use Chrome, Safari, or Edge browser
                 </p>
               </div>
@@ -417,12 +429,12 @@ const CareTips: React.FC<CareTipsProps> = ({ onBack }) => {
         </div>
 
         {/* About AI Care Tips */}
-        <div className="glassmorphic-card p-6 mb-6 max-w-2xl mx-auto">
-          <h3 className="font-semibold mb-4 flex items-center space-x-2" style={{ color: '#37474F', fontFamily: 'Inter, sans-serif' }}>
-            <Sparkles size={20} style={{ color: '#26A69A' }} />
+        <div className="bg-white p-6 mb-6 max-w-4xl mx-auto shadow-lg border border-gray-100" style={{ borderRadius: '12px' }}>
+          <h3 className="font-semibold mb-4 flex items-center space-x-2" style={{ color: '#333333', fontFamily: 'Poppins, sans-serif' }}>
+            <Sparkles size={20} style={{ color: '#4A90E2' }} />
             <span>About AI Care Tips</span>
           </h3>
-          <div className="space-y-3 text-sm" style={{ color: '#546E7A', fontFamily: 'Inter, sans-serif' }}>
+          <div className="space-y-3 text-sm" style={{ color: '#666666', fontFamily: 'Poppins, sans-serif' }}>
             <p>
               Our AI generates personalized care advice based on your pet's breed, age, and health conditions.
             </p>
@@ -430,8 +442,8 @@ const CareTips: React.FC<CareTipsProps> = ({ onBack }) => {
               Tips cover essential areas including diet, exercise, grooming, and general health maintenance.
             </p>
             {!petData?.name && (
-              <div className="glassmorphic-helper p-3 rounded-lg">
-                <p className="font-medium" style={{ color: '#26A69A', fontFamily: 'Inter, sans-serif' }}>
+              <div className="p-3" style={{ backgroundColor: '#4A90E220', borderRadius: '12px' }}>
+                <p className="font-medium" style={{ color: '#4A90E2', fontFamily: 'Poppins, sans-serif' }}>
                   💡 Create a pet profile to get more personalized recommendations!
                 </p>
               </div>
@@ -441,16 +453,16 @@ const CareTips: React.FC<CareTipsProps> = ({ onBack }) => {
 
         {/* User Context Info */}
         {currentUser && (
-          <div className="glassmorphic-helper p-4 rounded-lg max-w-2xl mx-auto mb-6">
+          <div className="p-4 max-w-4xl mx-auto mb-6" style={{ backgroundColor: '#4A90E220', borderRadius: '12px' }}>
             <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: '#26A69A' }}>
+              <div className="w-8 h-8 flex items-center justify-center" style={{ backgroundColor: '#4A90E2', borderRadius: '12px' }}>
                 <span className="text-white text-sm">👤</span>
               </div>
               <div>
-                <p className="font-medium text-sm" style={{ color: '#26A69A', fontFamily: 'Inter, sans-serif' }}>
+                <p className="font-medium text-sm" style={{ color: '#4A90E2', fontFamily: 'Poppins, sans-serif' }}>
                   Care tips for {currentUser}
                 </p>
-                <p className="text-xs" style={{ color: '#546E7A', fontFamily: 'Inter, sans-serif' }}>
+                <p className="text-xs" style={{ color: '#666666', fontFamily: 'Poppins, sans-serif' }}>
                   Tips are personalized based on your pet's profile
                 </p>
               </div>
@@ -459,8 +471,8 @@ const CareTips: React.FC<CareTipsProps> = ({ onBack }) => {
         )}
 
         {/* Disclaimer */}
-        <div className="glassmorphic-card p-4 max-w-2xl mx-auto">
-          <p className="text-xs text-center" style={{ color: '#546E7A', fontFamily: 'Inter, sans-serif' }}>
+        <div className="bg-white p-4 max-w-4xl mx-auto shadow-lg border border-gray-100" style={{ borderRadius: '12px' }}>
+          <p className="text-xs text-center" style={{ color: '#666666', fontFamily: 'Poppins, sans-serif' }}>
             ⚠️ These tips are for general guidance only. Always consult your veterinarian for specific health concerns.
           </p>
         </div>

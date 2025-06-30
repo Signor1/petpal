@@ -30,6 +30,11 @@ const VetFinder: React.FC<VetFinderProps> = ({ onBack }) => {
   const [petData, setPetData] = useState<PetData | null>(null);
   const [currentUser, setCurrentUser] = useState<string | null>(null);
 
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   // Mock vet clinic data
   const vetClinics: VetClinic[] = [
     {
@@ -148,8 +153,13 @@ const VetFinder: React.FC<VetFinderProps> = ({ onBack }) => {
     ));
   };
 
+  const handleBack = () => {
+    window.scrollTo(0, 0);
+    onBack();
+  };
+
   return (
-    <div className="min-h-screen pb-20 relative overflow-hidden" style={{ backgroundColor: '#F5F5F5' }}>
+    <div className="min-h-screen pb-20 relative overflow-hidden" style={{ backgroundColor: '#FFFFFF' }}>
       {/* Bouncing Paw Animation */}
       {showBounce && (
         <div className="fixed inset-0 pointer-events-none z-50 flex items-center justify-center">
@@ -173,21 +183,22 @@ const VetFinder: React.FC<VetFinderProps> = ({ onBack }) => {
               animationIterationCount: 'infinite',
             }}
           >
-            <div className="w-6 h-6 text-2xl" style={{ color: '#26A69A' }}>🐾</div>
+            <div className="w-6 h-6 text-2xl" style={{ color: '#A8D5BA' }}>🐾</div>
           </div>
         ))}
       </div>
 
-      <div className="relative z-20 w-full max-w-4xl mx-auto px-4 py-6">
+      <div className="relative z-20 w-full max-w-6xl mx-auto px-4 py-6">
         {/* Header */}
         <header className="flex items-center mb-8">
           <button
-            onClick={onBack}
-            className="mr-4 p-3 rounded-full transition-all duration-300 hover:scale-110 animate-pulse-on-hover focus:outline-none focus:ring-2 focus:ring-opacity-50"
+            onClick={handleBack}
+            className="mr-4 p-3 transition-all duration-300 hover:scale-110 animate-pulse-on-hover focus:outline-none focus:ring-2 focus:ring-opacity-50"
             style={{ 
-              backgroundColor: '#26A69A',
+              backgroundColor: '#A8D5BA',
               color: 'white',
-              boxShadow: '0 4px 16px 0 rgba(38, 166, 154, 0.3)'
+              boxShadow: '0 4px 16px 0 rgba(168, 213, 186, 0.3)',
+              borderRadius: '12px'
             }}
             aria-label="Go back to home screen"
           >
@@ -195,7 +206,7 @@ const VetFinder: React.FC<VetFinderProps> = ({ onBack }) => {
           </button>
           <div className="flex items-center space-x-4">
             <div className="animate-bounce-gentle">
-              <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: '#26A69A' }}>
+              <div className="w-12 h-12 flex items-center justify-center" style={{ backgroundColor: '#A8D5BA', borderRadius: '12px' }}>
                 <MapPin size={24} className="text-white" />
               </div>
             </div>
@@ -203,15 +214,15 @@ const VetFinder: React.FC<VetFinderProps> = ({ onBack }) => {
               <h1 
                 className="text-4xl font-bold"
                 style={{ 
-                  fontFamily: 'Bubblegum Sans, cursive',
+                  fontFamily: 'Poppins, sans-serif',
                   fontSize: '24px',
-                  color: '#26A69A'
+                  color: '#333333'
                 }}
               >
                 Find a Vet
               </h1>
               {currentUser && petData?.name && (
-                <p className="text-sm mt-1" style={{ color: '#546E7A', fontFamily: 'Inter, sans-serif' }}>
+                <p className="text-sm mt-1" style={{ color: '#666666', fontFamily: 'Poppins, sans-serif' }}>
                   Finding care for {petData.name}
                 </p>
               )}
@@ -220,21 +231,21 @@ const VetFinder: React.FC<VetFinderProps> = ({ onBack }) => {
         </header>
 
         {/* AI Tip Card */}
-        <div className="glassmorphic-card p-6 mb-6 max-w-2xl mx-auto" style={{ backgroundColor: 'rgba(38, 166, 154, 0.2)' }}>
+        <div className="bg-white p-6 mb-6 max-w-4xl mx-auto shadow-lg border border-gray-100" style={{ borderRadius: '12px' }}>
           <div className="flex items-start space-x-4">
             <div className="flex-shrink-0 mt-1">
-              <Sparkles size={24} style={{ color: '#26A69A' }} />
+              <Sparkles size={24} style={{ color: '#A8D5BA' }} />
             </div>
             <div className="flex-1">
-              <h2 className="text-lg font-semibold mb-3 flex items-center space-x-2" style={{ color: '#37474F', fontFamily: 'Inter, sans-serif' }}>
+              <h2 className="text-lg font-semibold mb-3 flex items-center space-x-2" style={{ color: '#333333', fontFamily: 'Poppins, sans-serif' }}>
                 <span>💡 AI Recommendation</span>
               </h2>
-              <p className="leading-relaxed mb-4" style={{ color: '#37474F', fontFamily: 'Inter, sans-serif', fontSize: '16px' }}>
+              <p className="leading-relaxed mb-4" style={{ color: '#333333', fontFamily: 'Poppins, sans-serif', fontSize: '16px' }}>
                 {aiTip || "Loading personalized recommendation..."}
               </p>
               {petData?.name && (
-                <div className="glassmorphic-helper p-3 rounded-lg">
-                  <p className="text-sm" style={{ color: '#26A69A', fontFamily: 'Inter, sans-serif' }}>
+                <div className="p-3" style={{ backgroundColor: '#A8D5BA20', borderRadius: '12px' }}>
+                  <p className="text-sm" style={{ color: '#A8D5BA', fontFamily: 'Poppins, sans-serif' }}>
                     🎯 Personalized for {petData.name}
                   </p>
                 </div>
@@ -245,20 +256,20 @@ const VetFinder: React.FC<VetFinderProps> = ({ onBack }) => {
 
         {/* Vet Clinics List */}
         <div className="space-y-6 mb-8">
-          <h2 className="text-xl font-semibold mb-6 flex items-center space-x-2" style={{ color: '#37474F', fontFamily: 'Inter, sans-serif' }}>
-            <Stethoscope size={20} style={{ color: '#26A69A' }} />
+          <h2 className="text-xl font-semibold mb-6 flex items-center space-x-2" style={{ color: '#333333', fontFamily: 'Poppins, sans-serif' }}>
+            <Stethoscope size={20} style={{ color: '#A8D5BA' }} />
             <span>Recommended Veterinarians</span>
           </h2>
 
           {vetClinics.map((vet) => (
-            <div key={vet.id} className="glassmorphic-card p-6 hover:shadow-xl transition-all duration-300 hover:scale-[1.02] max-w-2xl mx-auto border-coral-glow">
+            <div key={vet.id} className="bg-white p-6 hover:shadow-xl transition-all duration-300 hover:scale-[1.02] max-w-4xl mx-auto shadow-lg border border-gray-100" style={{ borderRadius: '12px' }}>
               {/* Vet Name and Rating */}
               <div className="flex justify-between items-start mb-4">
                 <div className="flex-1">
-                  <h3 className="text-lg font-semibold mb-2 flex items-center space-x-2" style={{ color: '#37474F', fontFamily: 'Inter, sans-serif' }}>
+                  <h3 className="text-lg font-semibold mb-2 flex items-center space-x-2" style={{ color: '#333333', fontFamily: 'Poppins, sans-serif' }}>
                     <span>{vet.name}</span>
                     {vet.emergency && (
-                      <span className="text-xs px-2 py-1 rounded-full font-medium" style={{ backgroundColor: '#D32F2F', color: 'white' }}>
+                      <span className="text-xs px-2 py-1 font-medium text-white" style={{ backgroundColor: '#D32F2F', borderRadius: '12px' }}>
                         24/7
                       </span>
                     )}
@@ -267,7 +278,7 @@ const VetFinder: React.FC<VetFinderProps> = ({ onBack }) => {
                     <div className="flex items-center space-x-1">
                       {renderStars(vet.rating)}
                     </div>
-                    <span className="text-sm font-medium" style={{ color: '#37474F', fontFamily: 'Inter, sans-serif' }}>
+                    <span className="text-sm font-medium" style={{ color: '#333333', fontFamily: 'Poppins, sans-serif' }}>
                       {vet.rating} ({Math.floor(Math.random() * 200 + 50)} reviews)
                     </span>
                   </div>
@@ -276,34 +287,34 @@ const VetFinder: React.FC<VetFinderProps> = ({ onBack }) => {
 
               {/* Address and Distance */}
               <div className="flex items-start space-x-3 mb-4">
-                <MapPin size={16} style={{ color: '#546E7A' }} className="mt-1 flex-shrink-0" />
+                <MapPin size={16} style={{ color: '#666666' }} className="mt-1 flex-shrink-0" />
                 <div className="flex-1">
-                  <p className="text-sm" style={{ color: '#37474F', fontFamily: 'Inter, sans-serif' }}>{vet.address}</p>
-                  <p className="text-xs mt-1" style={{ color: '#546E7A', fontFamily: 'Inter, sans-serif' }}>{vet.distance} away</p>
+                  <p className="text-sm" style={{ color: '#333333', fontFamily: 'Poppins, sans-serif' }}>{vet.address}</p>
+                  <p className="text-xs mt-1" style={{ color: '#666666', fontFamily: 'Poppins, sans-serif' }}>{vet.distance} away</p>
                 </div>
               </div>
 
               {/* Phone and Hours */}
               <div className="space-y-3 mb-4">
                 <div className="flex items-center space-x-3">
-                  <Phone size={16} style={{ color: '#546E7A' }} />
-                  <span className="text-sm font-medium" style={{ color: '#37474F', fontFamily: 'Inter, sans-serif' }}>{vet.phone}</span>
+                  <Phone size={16} style={{ color: '#666666' }} />
+                  <span className="text-sm font-medium" style={{ color: '#333333', fontFamily: 'Poppins, sans-serif' }}>{vet.phone}</span>
                 </div>
                 <div className="flex items-start space-x-3">
-                  <Clock size={16} style={{ color: '#546E7A' }} className="mt-0.5 flex-shrink-0" />
-                  <span className="text-sm" style={{ color: '#37474F', fontFamily: 'Inter, sans-serif' }}>{vet.hours}</span>
+                  <Clock size={16} style={{ color: '#666666' }} className="mt-0.5 flex-shrink-0" />
+                  <span className="text-sm" style={{ color: '#333333', fontFamily: 'Poppins, sans-serif' }}>{vet.hours}</span>
                 </div>
               </div>
 
               {/* Specialties */}
               <div className="mb-6">
-                <p className="text-xs font-semibold mb-3" style={{ color: '#546E7A', fontFamily: 'Inter, sans-serif' }}>SPECIALTIES:</p>
+                <p className="text-xs font-semibold mb-3" style={{ color: '#666666', fontFamily: 'Poppins, sans-serif' }}>SPECIALTIES:</p>
                 <div className="flex flex-wrap gap-2">
                   {vet.specialties.map((specialty, index) => (
                     <span
                       key={index}
-                      className="text-xs px-3 py-1 rounded-full font-medium"
-                      style={{ backgroundColor: 'rgba(255, 111, 97, 0.2)', color: '#37474F' }}
+                      className="text-xs px-3 py-1 font-medium"
+                      style={{ backgroundColor: '#A8D5BA20', color: '#333333', borderRadius: '12px' }}
                     >
                       {specialty}
                     </span>
@@ -314,12 +325,13 @@ const VetFinder: React.FC<VetFinderProps> = ({ onBack }) => {
               {/* Contact Button */}
               <button
                 onClick={() => handleContactVet(vet.name, vet.phone)}
-                className="w-full py-3 px-6 rounded-lg font-semibold transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-opacity-50 flex items-center justify-center space-x-2"
+                className="w-full py-3 px-6 font-semibold transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-opacity-50 flex items-center justify-center space-x-2"
                 style={{
-                  backgroundColor: '#FFD54F',
-                  color: '#37474F',
-                  fontFamily: 'Inter, sans-serif',
-                  boxShadow: '0 8px 32px 0 rgba(255, 213, 79, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 -1px 0 rgba(0, 0, 0, 0.1)'
+                  backgroundColor: '#A8D5BA',
+                  color: '#FFFFFF',
+                  fontFamily: 'Poppins, sans-serif',
+                  boxShadow: '0 8px 32px 0 rgba(168, 213, 186, 0.4)',
+                  borderRadius: '12px'
                 }}
               >
                 <Phone size={18} />
@@ -330,16 +342,16 @@ const VetFinder: React.FC<VetFinderProps> = ({ onBack }) => {
         </div>
 
         {/* Emergency Notice */}
-        <div className="glassmorphic-card p-4 mb-6 max-w-2xl mx-auto" style={{ backgroundColor: 'rgba(211, 47, 47, 0.1)' }}>
+        <div className="bg-white p-4 mb-6 max-w-4xl mx-auto shadow-lg border border-gray-100" style={{ borderRadius: '12px' }}>
           <div className="flex items-start space-x-3">
             <div className="flex-shrink-0">
-              <div className="w-6 h-6 rounded-full flex items-center justify-center" style={{ backgroundColor: '#D32F2F' }}>
-                <span className="text-white text-sm font-bold">!</span>
+              <div className="w-6 h-6 flex items-center justify-center text-white" style={{ backgroundColor: '#D32F2F', borderRadius: '12px' }}>
+                <span className="text-sm font-bold">!</span>
               </div>
             </div>
             <div className="flex-1">
-              <h3 className="font-semibold mb-1" style={{ color: '#D32F2F', fontFamily: 'Inter, sans-serif' }}>Emergency Situations</h3>
-              <p className="text-sm" style={{ color: '#37474F', fontFamily: 'Inter, sans-serif' }}>
+              <h3 className="font-semibold mb-1" style={{ color: '#D32F2F', fontFamily: 'Poppins, sans-serif' }}>Emergency Situations</h3>
+              <p className="text-sm" style={{ color: '#333333', fontFamily: 'Poppins, sans-serif' }}>
                 For life-threatening emergencies, call the nearest 24/7 animal hospital immediately. 
                 Don't wait for an appointment if your pet is in severe distress.
               </p>
@@ -348,26 +360,26 @@ const VetFinder: React.FC<VetFinderProps> = ({ onBack }) => {
         </div>
 
         {/* Tips Section */}
-        <div className="glassmorphic-card p-6 mb-6 max-w-2xl mx-auto">
-          <h3 className="font-semibold mb-4 flex items-center space-x-2" style={{ color: '#37474F', fontFamily: 'Inter, sans-serif' }}>
-            <Sparkles size={20} style={{ color: '#26A69A' }} />
+        <div className="bg-white p-6 mb-6 max-w-4xl mx-auto shadow-lg border border-gray-100" style={{ borderRadius: '12px' }}>
+          <h3 className="font-semibold mb-4 flex items-center space-x-2" style={{ color: '#333333', fontFamily: 'Poppins, sans-serif' }}>
+            <Sparkles size={20} style={{ color: '#A8D5BA' }} />
             <span>Choosing the Right Vet</span>
           </h3>
-          <div className="space-y-3 text-sm" style={{ color: '#546E7A', fontFamily: 'Inter, sans-serif' }}>
+          <div className="space-y-3 text-sm" style={{ color: '#666666', fontFamily: 'Poppins, sans-serif' }}>
             <div className="flex items-start space-x-3">
-              <div className="w-2 h-2 rounded-full mt-2 flex-shrink-0" style={{ backgroundColor: '#26A69A' }}></div>
+              <div className="w-2 h-2 mt-2 flex-shrink-0" style={{ backgroundColor: '#A8D5BA', borderRadius: '12px' }}></div>
               <p>Schedule a consultation visit before you need emergency care</p>
             </div>
             <div className="flex items-start space-x-3">
-              <div className="w-2 h-2 rounded-full mt-2 flex-shrink-0" style={{ backgroundColor: '#26A69A' }}></div>
+              <div className="w-2 h-2 mt-2 flex-shrink-0" style={{ backgroundColor: '#A8D5BA', borderRadius: '12px' }}></div>
               <p>Ask about their emergency protocols and after-hours availability</p>
             </div>
             <div className="flex items-start space-x-3">
-              <div className="w-2 h-2 rounded-full mt-2 flex-shrink-0" style={{ backgroundColor: '#26A69A' }}></div>
+              <div className="w-2 h-2 mt-2 flex-shrink-0" style={{ backgroundColor: '#A8D5BA', borderRadius: '12px' }}></div>
               <p>Verify they accept your pet insurance or discuss payment options</p>
             </div>
             <div className="flex items-start space-x-3">
-              <div className="w-2 h-2 rounded-full mt-2 flex-shrink-0" style={{ backgroundColor: '#26A69A' }}></div>
+              <div className="w-2 h-2 mt-2 flex-shrink-0" style={{ backgroundColor: '#A8D5BA', borderRadius: '12px' }}></div>
               <p>Look for clean facilities and friendly, knowledgeable staff</p>
             </div>
           </div>
@@ -375,16 +387,16 @@ const VetFinder: React.FC<VetFinderProps> = ({ onBack }) => {
 
         {/* User Context Info */}
         {currentUser && (
-          <div className="glassmorphic-helper p-4 rounded-lg max-w-2xl mx-auto mb-6">
+          <div className="p-4 max-w-4xl mx-auto mb-6" style={{ backgroundColor: '#A8D5BA20', borderRadius: '12px' }}>
             <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: '#26A69A' }}>
+              <div className="w-8 h-8 flex items-center justify-center" style={{ backgroundColor: '#A8D5BA', borderRadius: '12px' }}>
                 <span className="text-white text-sm">👤</span>
               </div>
               <div>
-                <p className="font-medium text-sm" style={{ color: '#26A69A', fontFamily: 'Inter, sans-serif' }}>
+                <p className="font-medium text-sm" style={{ color: '#A8D5BA', fontFamily: 'Poppins, sans-serif' }}>
                   Vet recommendations for {currentUser}
                 </p>
-                <p className="text-xs" style={{ color: '#546E7A', fontFamily: 'Inter, sans-serif' }}>
+                <p className="text-xs" style={{ color: '#666666', fontFamily: 'Poppins, sans-serif' }}>
                   Personalized based on your location and pet's needs
                 </p>
               </div>
@@ -393,8 +405,8 @@ const VetFinder: React.FC<VetFinderProps> = ({ onBack }) => {
         )}
 
         {/* Disclaimer */}
-        <div className="glassmorphic-card p-4 max-w-2xl mx-auto">
-          <p className="text-xs text-center" style={{ color: '#546E7A', fontFamily: 'Inter, sans-serif' }}>
+        <div className="bg-white p-4 max-w-4xl mx-auto shadow-lg border border-gray-100" style={{ borderRadius: '12px' }}>
+          <p className="text-xs text-center" style={{ color: '#666666', fontFamily: 'Poppins, sans-serif' }}>
             📍 Clinic information is for demonstration purposes. Always verify current details before visiting.
           </p>
         </div>

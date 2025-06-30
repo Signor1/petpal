@@ -34,6 +34,11 @@ const PetProfile: React.FC<PetProfileProps> = ({ onBack }) => {
   const [showConfetti, setShowConfetti] = useState(false);
   const [currentUser, setCurrentUser] = useState<string | null>(null);
 
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   // Load saved data on component mount
   useEffect(() => {
     // Get current user email
@@ -116,8 +121,13 @@ const PetProfile: React.FC<PetProfileProps> = ({ onBack }) => {
 
   const isFormValid = petData.name.trim() && petData.age.trim() && parseInt(petData.age) > 0;
 
+  const handleBack = () => {
+    window.scrollTo(0, 0);
+    onBack();
+  };
+
   return (
-    <div className="min-h-screen pb-20 relative overflow-hidden" style={{ backgroundColor: '#F5F5F5' }}>
+    <div className="min-h-screen pb-20 relative overflow-hidden" style={{ backgroundColor: '#FFFFFF' }}>
       {showConfetti && <ConfettiAnimation />}
       
       {/* Animated Paw Trail Background */}
@@ -134,21 +144,22 @@ const PetProfile: React.FC<PetProfileProps> = ({ onBack }) => {
               animationIterationCount: 'infinite',
             }}
           >
-            <div className="w-6 h-6 text-2xl" style={{ color: '#FF6F61' }}>🐾</div>
+            <div className="w-6 h-6 text-2xl" style={{ color: '#F28C38' }}>🐾</div>
           </div>
         ))}
       </div>
       
-      <div className="relative z-20 w-full max-w-4xl mx-auto px-4 py-6">
+      <div className="relative z-20 w-full max-w-6xl mx-auto px-4 py-6">
         {/* Header */}
         <header className="flex items-center mb-8">
           <button
-            onClick={onBack}
-            className="mr-4 p-3 rounded-full transition-all duration-300 hover:scale-110 animate-pulse-on-hover focus:outline-none focus:ring-2 focus:ring-opacity-50"
+            onClick={handleBack}
+            className="mr-4 p-3 transition-all duration-300 hover:scale-110 animate-pulse-on-hover focus:outline-none focus:ring-2 focus:ring-opacity-50"
             style={{ 
-              backgroundColor: '#26A69A',
+              backgroundColor: '#F28C38',
               color: 'white',
-              boxShadow: '0 4px 16px 0 rgba(38, 166, 154, 0.3)'
+              boxShadow: '0 4px 16px 0 rgba(242, 140, 56, 0.3)',
+              borderRadius: '12px'
             }}
             aria-label="Go back to home screen"
           >
@@ -156,7 +167,7 @@ const PetProfile: React.FC<PetProfileProps> = ({ onBack }) => {
           </button>
           <div className="flex items-center space-x-4">
             <div className="animate-bounce-gentle">
-              <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: '#26A69A' }}>
+              <div className="w-12 h-12 flex items-center justify-center" style={{ backgroundColor: '#F28C38', borderRadius: '12px' }}>
                 <span className="text-2xl">🐾</span>
               </div>
             </div>
@@ -164,15 +175,15 @@ const PetProfile: React.FC<PetProfileProps> = ({ onBack }) => {
               <h1 
                 className="text-4xl font-bold animate-bounce-gentle"
                 style={{ 
-                  fontFamily: 'Bubblegum Sans, cursive',
+                  fontFamily: 'Poppins, sans-serif',
                   fontSize: '32px',
-                  color: '#26A69A'
+                  color: '#333333'
                 }}
               >
                 My Pet
               </h1>
               {currentUser && (
-                <p className="text-sm mt-1" style={{ color: '#546E7A', fontFamily: 'Inter, sans-serif' }}>
+                <p className="text-sm mt-1" style={{ color: '#666666', fontFamily: 'Poppins, sans-serif' }}>
                   Profile for {currentUser}
                 </p>
               )}
@@ -182,28 +193,28 @@ const PetProfile: React.FC<PetProfileProps> = ({ onBack }) => {
 
         {/* Success Message */}
         {showSuccess && (
-          <div className="mb-6 glassmorphic-card p-4 animate-fade-in max-w-2xl mx-auto" style={{ backgroundColor: 'rgba(255, 213, 79, 0.2)' }}>
+          <div className="mb-6 p-4 animate-fade-in max-w-4xl mx-auto shadow-lg border border-gray-100" style={{ backgroundColor: '#F28C3820', borderRadius: '12px' }}>
             <div className="flex items-center space-x-3">
               <div className="animate-heart-beat">
-                <CheckCircle size={24} style={{ color: '#FFD54F' }} />
+                <CheckCircle size={24} style={{ color: '#F28C38' }} />
               </div>
-              <span className="font-medium" style={{ color: '#37474F', fontFamily: 'Inter, sans-serif' }}>
+              <span className="font-medium" style={{ color: '#333333', fontFamily: 'Poppins, sans-serif' }}>
                 Profile Saved! Redirecting to Home...
               </span>
             </div>
           </div>
         )}
 
-        {/* Glassmorphic Profile Form */}
-        <div className="glassmorphic-card p-8 max-w-2xl mx-auto">
+        {/* Profile Form */}
+        <div className="bg-white p-8 max-w-4xl mx-auto shadow-lg border border-gray-100" style={{ borderRadius: '12px' }}>
           <div className="text-center mb-8">
-            <div className="w-16 h-16 glassmorphic-icon mx-auto mb-4">
-              <Heart size={32} style={{ color: '#FF6F61' }} />
+            <div className="w-16 h-16 mx-auto mb-4 flex items-center justify-center" style={{ backgroundColor: '#F28C3820', borderRadius: '12px' }}>
+              <Heart size={32} style={{ color: '#F28C38' }} />
             </div>
-            <h2 className="text-xl font-semibold mb-2" style={{ color: '#37474F', fontFamily: 'Inter, sans-serif' }}>
+            <h2 className="text-xl font-semibold mb-2" style={{ color: '#333333', fontFamily: 'Poppins, sans-serif' }}>
               {petData.name ? `${petData.name}'s Profile` : 'Create Pet Profile'}
             </h2>
-            <p className="text-sm" style={{ color: '#546E7A', fontFamily: 'Inter, sans-serif' }}>
+            <p className="text-sm" style={{ color: '#666666', fontFamily: 'Poppins, sans-serif' }}>
               Tell us about your furry friend to get personalized care recommendations
             </p>
           </div>
@@ -214,7 +225,7 @@ const PetProfile: React.FC<PetProfileProps> = ({ onBack }) => {
               <label 
                 htmlFor="petName" 
                 className="block text-sm font-semibold mb-3"
-                style={{ color: '#37474F', fontFamily: 'Inter, sans-serif' }}
+                style={{ color: '#333333', fontFamily: 'Poppins, sans-serif' }}
               >
                 Pet Name *
               </label>
@@ -223,11 +234,12 @@ const PetProfile: React.FC<PetProfileProps> = ({ onBack }) => {
                 id="petName"
                 value={petData.name}
                 onChange={(e) => handleInputChange('name', e.target.value)}
-                className="glassmorphic-input w-full px-4 py-4 rounded-xl transition-all duration-300"
+                className="w-full px-4 py-4 transition-all duration-300 border border-gray-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-200"
                 style={{ 
-                  fontFamily: 'Inter, sans-serif',
+                  fontFamily: 'Poppins, sans-serif',
                   fontSize: '16px',
-                  color: '#37474F'
+                  color: '#333333',
+                  borderRadius: '12px'
                 }}
                 placeholder="Enter your pet's name (e.g., Rover, Bella, Max)"
                 required
@@ -239,7 +251,7 @@ const PetProfile: React.FC<PetProfileProps> = ({ onBack }) => {
               <label 
                 htmlFor="breed" 
                 className="block text-sm font-semibold mb-3"
-                style={{ color: '#37474F', fontFamily: 'Inter, sans-serif' }}
+                style={{ color: '#333333', fontFamily: 'Poppins, sans-serif' }}
               >
                 Breed
               </label>
@@ -247,11 +259,12 @@ const PetProfile: React.FC<PetProfileProps> = ({ onBack }) => {
                 id="breed"
                 value={petData.breed}
                 onChange={(e) => handleInputChange('breed', e.target.value)}
-                className="glassmorphic-input w-full px-4 py-4 rounded-xl transition-all duration-300"
+                className="w-full px-4 py-4 transition-all duration-300 border border-gray-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-200"
                 style={{ 
-                  fontFamily: 'Inter, sans-serif',
+                  fontFamily: 'Poppins, sans-serif',
                   fontSize: '16px',
-                  color: '#37474F'
+                  color: '#333333',
+                  borderRadius: '12px'
                 }}
               >
                 <optgroup label="Popular Dog Breeds">
@@ -288,7 +301,7 @@ const PetProfile: React.FC<PetProfileProps> = ({ onBack }) => {
               <label 
                 htmlFor="age" 
                 className="block text-sm font-semibold mb-3"
-                style={{ color: '#37474F', fontFamily: 'Inter, sans-serif' }}
+                style={{ color: '#333333', fontFamily: 'Poppins, sans-serif' }}
               >
                 Age (years) *
               </label>
@@ -300,16 +313,17 @@ const PetProfile: React.FC<PetProfileProps> = ({ onBack }) => {
                 step="1"
                 value={petData.age}
                 onChange={(e) => handleInputChange('age', e.target.value)}
-                className="glassmorphic-input w-full px-4 py-4 rounded-xl transition-all duration-300"
+                className="w-full px-4 py-4 transition-all duration-300 border border-gray-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-200"
                 style={{ 
-                  fontFamily: 'Inter, sans-serif',
+                  fontFamily: 'Poppins, sans-serif',
                   fontSize: '16px',
-                  color: '#37474F'
+                  color: '#333333',
+                  borderRadius: '12px'
                 }}
                 placeholder="Enter your pet's age in years"
                 required
               />
-              <p className="mt-2 text-xs" style={{ color: '#546E7A', fontFamily: 'Inter, sans-serif' }}>
+              <p className="mt-2 text-xs" style={{ color: '#666666', fontFamily: 'Poppins, sans-serif' }}>
                 💡 If unsure, estimate based on size and behavior
               </p>
             </div>
@@ -319,7 +333,7 @@ const PetProfile: React.FC<PetProfileProps> = ({ onBack }) => {
               <label 
                 htmlFor="healthConditions" 
                 className="block text-sm font-semibold mb-3"
-                style={{ color: '#37474F', fontFamily: 'Inter, sans-serif' }}
+                style={{ color: '#333333', fontFamily: 'Poppins, sans-serif' }}
               >
                 Health Conditions & Notes
               </label>
@@ -328,15 +342,16 @@ const PetProfile: React.FC<PetProfileProps> = ({ onBack }) => {
                 rows={4}
                 value={petData.healthConditions}
                 onChange={(e) => handleInputChange('healthConditions', e.target.value)}
-                className="glassmorphic-input w-full px-4 py-4 rounded-xl transition-all duration-300 resize-none"
+                className="w-full px-4 py-4 transition-all duration-300 resize-none border border-gray-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-200"
                 style={{ 
-                  fontFamily: 'Inter, sans-serif',
+                  fontFamily: 'Poppins, sans-serif',
                   fontSize: '16px',
-                  color: '#37474F'
+                  color: '#333333',
+                  borderRadius: '12px'
                 }}
                 placeholder="Enter any health conditions, allergies, medications, or special notes about your pet... (e.g., 'Allergic to chicken, takes arthritis medication daily')"
               />
-              <p className="mt-2 text-xs" style={{ color: '#546E7A', fontFamily: 'Inter, sans-serif' }}>
+              <p className="mt-2 text-xs" style={{ color: '#666666', fontFamily: 'Poppins, sans-serif' }}>
                 📝 This helps us provide better personalized care recommendations
               </p>
             </div>
@@ -346,61 +361,67 @@ const PetProfile: React.FC<PetProfileProps> = ({ onBack }) => {
               type="button"
               onClick={handleSave}
               disabled={!isFormValid}
-              className={`glassmorphic-button w-full py-4 px-6 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center space-x-3 ${
+              className={`w-full py-4 px-6 font-semibold transition-all duration-300 flex items-center justify-center space-x-3 ${
                 isFormValid
-                  ? 'hover:scale-105 hover:shadow-neumorphic-hover animate-pulse-on-hover'
+                  ? 'hover:scale-105 hover:shadow-xl animate-pulse-on-hover'
                   : 'opacity-60 cursor-not-allowed'
               }`}
-              style={{ fontFamily: 'Inter, sans-serif' }}
+              style={{ 
+                fontFamily: 'Poppins, sans-serif',
+                backgroundColor: '#F28C38',
+                color: 'white',
+                borderRadius: '12px',
+                boxShadow: '0 8px 32px 0 rgba(242, 140, 56, 0.4)'
+              }}
             >
-              <Heart size={20} style={{ color: '#37474F' }} />
-              <span style={{ color: '#37474F' }}>Save Profile</span>
+              <Heart size={20} />
+              <span>Save Profile</span>
             </button>
           </form>
 
           {/* Form Validation Note */}
-          <div className="mt-6 glassmorphic-helper p-4 rounded-lg">
-            <p className="text-sm text-center" style={{ color: '#37474F', fontFamily: 'Inter, sans-serif' }}>
-              <span style={{ color: '#FF6F61' }}>*</span> Required fields - Name and Age are needed for personalized recommendations
+          <div className="mt-6 p-4" style={{ backgroundColor: '#F28C3820', borderRadius: '12px' }}>
+            <p className="text-sm text-center" style={{ color: '#333333', fontFamily: 'Poppins, sans-serif' }}>
+              <span style={{ color: '#F28C38' }}>*</span> Required fields - Name and Age are needed for personalized recommendations
             </p>
           </div>
         </div>
 
         {/* Tips Section */}
-        <div className="mt-8 glassmorphic-card p-6 max-w-2xl mx-auto">
-          <h3 className="font-semibold mb-4 flex items-center space-x-2" style={{ color: '#37474F', fontFamily: 'Inter, sans-serif' }}>
-            <Heart size={16} style={{ color: '#FF6F61' }} />
+        <div className="mt-8 bg-white p-6 max-w-4xl mx-auto shadow-lg border border-gray-100" style={{ borderRadius: '12px' }}>
+          <h3 className="font-semibold mb-4 flex items-center space-x-2" style={{ color: '#333333', fontFamily: 'Poppins, sans-serif' }}>
+            <Heart size={16} style={{ color: '#F28C38' }} />
             <span>Why We Need This Info</span>
           </h3>
-          <div className="space-y-3 text-sm" style={{ color: '#546E7A', fontFamily: 'Inter, sans-serif' }}>
+          <div className="space-y-3 text-sm" style={{ color: '#666666', fontFamily: 'Poppins, sans-serif' }}>
             <div className="flex items-start space-x-3">
-              <span className="mt-1" style={{ color: '#FF6F61' }}>•</span>
-              <p><strong style={{ color: '#37474F' }}>Name:</strong> Personalizes tips and reminders just for your pet</p>
+              <span className="mt-1" style={{ color: '#F28C38' }}>•</span>
+              <p><strong style={{ color: '#333333' }}>Name:</strong> Personalizes tips and reminders just for your pet</p>
             </div>
             <div className="flex items-start space-x-3">
-              <span className="mt-1" style={{ color: '#FF6F61' }}>•</span>
-              <p><strong style={{ color: '#37474F' }}>Breed:</strong> Provides breed-specific care recommendations</p>
+              <span className="mt-1" style={{ color: '#F28C38' }}>•</span>
+              <p><strong style={{ color: '#333333' }}>Breed:</strong> Provides breed-specific care recommendations</p>
             </div>
             <div className="flex items-start space-x-3">
-              <span className="mt-1" style={{ color: '#FF6F61' }}>•</span>
-              <p><strong style={{ color: '#37474F' }}>Age:</strong> Adjusts advice for puppies, adults, or senior pets</p>
+              <span className="mt-1" style={{ color: '#F28C38' }}>•</span>
+              <p><strong style={{ color: '#333333' }}>Age:</strong> Adjusts advice for puppies, adults, or senior pets</p>
             </div>
             <div className="flex items-start space-x-3">
-              <span className="mt-1" style={{ color: '#FF6F61' }}>•</span>
-              <p><strong style={{ color: '#37474F' }}>Health Notes:</strong> Ensures safe, relevant care suggestions</p>
+              <span className="mt-1" style={{ color: '#F28C38' }}>•</span>
+              <p><strong style={{ color: '#333333' }}>Health Notes:</strong> Ensures safe, relevant care suggestions</p>
             </div>
           </div>
         </div>
 
         {/* Data Privacy Note */}
-        <div className="mt-6 glassmorphic-helper p-4 rounded-lg max-w-2xl mx-auto">
+        <div className="mt-6 p-4 max-w-4xl mx-auto" style={{ backgroundColor: '#4A90E220', borderRadius: '12px' }}>
           <div className="flex items-start space-x-3">
             <span className="text-lg">🔒</span>
             <div>
-              <p className="font-medium text-sm mb-1" style={{ color: '#26A69A', fontFamily: 'Inter, sans-serif' }}>
+              <p className="font-medium text-sm mb-1" style={{ color: '#4A90E2', fontFamily: 'Poppins, sans-serif' }}>
                 Your Data is Safe
               </p>
-              <p className="text-xs" style={{ color: '#546E7A', fontFamily: 'Inter, sans-serif' }}>
+              <p className="text-xs" style={{ color: '#666666', fontFamily: 'Poppins, sans-serif' }}>
                 All pet information is stored locally on your device and linked to your email. 
                 We never share your personal or pet data with third parties.
               </p>

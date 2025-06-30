@@ -16,22 +16,29 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ currentScreen, onNa
     { id: 'reminders', icon: Bell, label: 'Reminders' }
   ];
 
+  const handleNavigate = (screenId: string) => {
+    // Scroll to top before navigation
+    window.scrollTo(0, 0);
+    onNavigate(screenId);
+  };
+
   return (
-    <nav className="fixed bottom-0 left-0 right-0 glassmorphic-card border-t shadow-lg z-40" style={{ borderColor: 'rgba(38, 166, 154, 0.3)' }}>
-      <div className="w-full max-w-4xl mx-auto px-2 py-2">
+    <nav className="fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg z-40" style={{ borderColor: '#4A90E220', borderRadius: '12px 12px 0 0' }}>
+      <div className="w-full max-w-6xl mx-auto px-2 py-2">
         <div className="flex justify-around items-center">
           {navItems.map(({ id, icon: Icon, label }) => (
             <button
               key={id}
-              onClick={() => onNavigate(id)}
-              className={`flex flex-col items-center space-y-1 px-2 py-2 rounded-lg transition-all duration-300 min-w-0 flex-1 ${
+              onClick={() => handleNavigate(id)}
+              className={`flex flex-col items-center space-y-1 px-2 py-2 transition-all duration-300 min-w-0 flex-1 ${
                 currentScreen === id
                   ? 'scale-105'
-                  : 'hover:scale-105 hover:bg-white hover:bg-opacity-20'
+                  : 'hover:scale-105 hover:bg-gray-50'
               }`}
               style={{
-                backgroundColor: currentScreen === id ? 'rgba(38, 166, 154, 0.2)' : 'transparent',
-                color: currentScreen === id ? '#26A69A' : '#546E7A'
+                backgroundColor: currentScreen === id ? '#4A90E220' : 'transparent',
+                color: currentScreen === id ? '#4A90E2' : '#666666',
+                borderRadius: '12px'
               }}
             >
               <Icon 
