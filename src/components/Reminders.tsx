@@ -189,7 +189,7 @@ const Reminders: React.FC<RemindersProps> = ({ onBack, onPawPointsUpdate }) => {
     // Update global Paw Points counter
     onPawPointsUpdate(10);
 
-    // Show confetti and success message
+    // Show coral confetti and success message
     setShowConfetti(true);
     setShowSuccess(true);
     setCompletedTask(`Great job! You completed "${task}" and earned 10 Paw Points! 🎉`);
@@ -252,27 +252,84 @@ const Reminders: React.FC<RemindersProps> = ({ onBack, onPawPointsUpdate }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20" style={{ fontFamily: 'Poppins, sans-serif' }}>
-      {showConfetti && <ConfettiAnimation />}
+    <div className="min-h-screen pb-20 relative overflow-hidden" style={{ backgroundColor: '#F5F5F5' }}>
+      {/* Coral Confetti Animation */}
+      {showConfetti && (
+        <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden">
+          {Array.from({ length: 50 }, (_, i) => (
+            <div
+              key={i}
+              className="absolute w-3 h-3 opacity-80 animate-confetti"
+              style={{
+                left: `${Math.random() * 100}%`,
+                backgroundColor: '#FF6F61',
+                animationDelay: `${Math.random() * 3}s`,
+                borderRadius: '50%',
+                boxShadow: '0 0 6px #FF6F61',
+              }}
+            />
+          ))}
+        </div>
+      )}
       
-      <div className="w-full max-w-4xl mx-auto px-4 py-6">
+      {/* Animated Paw Trail Background */}
+      <div className="fixed inset-0 pointer-events-none z-10">
+        {Array.from({ length: 12 }, (_, i) => (
+          <div
+            key={i}
+            className="absolute opacity-20 animate-paw-trail-loop"
+            style={{
+              left: `${8 + (i * 7)}%`,
+              top: `${10 + (i % 5) * 18}%`,
+              animationDelay: `${i * 1.2}s`,
+              animationDuration: '10s',
+              animationIterationCount: 'infinite',
+            }}
+          >
+            <div className="w-6 h-6 text-2xl" style={{ color: '#26A69A' }}>🐾</div>
+          </div>
+        ))}
+      </div>
+      
+      <div className="relative z-20 w-full max-w-4xl mx-auto px-4 py-6">
         {/* Header */}
         <header className="flex items-center mb-8">
           <button
             onClick={onBack}
-            className="mr-4 p-2 rounded-full hover:bg-gray-200 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-teal-400 focus:ring-opacity-50"
+            className="mr-4 p-3 rounded-full transition-all duration-300 hover:scale-110 animate-pulse-on-hover focus:outline-none focus:ring-2 focus:ring-opacity-50"
+            style={{ 
+              backgroundColor: '#26A69A',
+              color: 'white',
+              boxShadow: '0 4px 16px 0 rgba(38, 166, 154, 0.3)'
+            }}
             aria-label="Go back to home screen"
           >
-            <ArrowLeft size={24} className="text-gray-700" />
+            <ArrowLeft size={24} />
           </button>
-          <div className="flex items-center space-x-3">
-            <div className="animate-bounce">
-              <Bell size={32} className="text-teal-500" />
+          <div className="flex items-center space-x-4">
+            <div className="animate-bounce-gentle">
+              <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: '#26A69A' }}>
+                <Bell size={24} className="text-white" />
+              </div>
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-teal-500">Reminders</h1>
+              <h1 
+                className="text-4xl font-bold"
+                style={{ 
+                  fontFamily: 'Bubblegum Sans, cursive',
+                  fontSize: '24px',
+                  background: 'linear-gradient(135deg, #26A69A 0%, #FF6F61 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text'
+                }}
+              >
+                Reminders
+              </h1>
               {currentUser && petData?.name && (
-                <p className="text-sm text-gray-600">Managing {petData.name}'s care schedule</p>
+                <p className="text-sm mt-1" style={{ color: '#546E7A', fontFamily: 'Inter, sans-serif' }}>
+                  Managing {petData.name}'s care schedule
+                </p>
               )}
             </div>
           </div>
@@ -280,47 +337,55 @@ const Reminders: React.FC<RemindersProps> = ({ onBack, onPawPointsUpdate }) => {
 
         {/* Success Message */}
         {showSuccess && (
-          <div className="mb-6 p-4 bg-green-100 border border-green-300 rounded-lg flex items-center space-x-3 animate-fade-in max-w-2xl mx-auto">
-            <div className="animate-pulse">
-              <CheckCircle size={24} className="text-green-600" />
+          <div className="mb-6 glassmorphic-card p-4 animate-fade-in max-w-2xl mx-auto" style={{ backgroundColor: 'rgba(76, 175, 80, 0.2)' }}>
+            <div className="flex items-center space-x-3">
+              <div className="animate-heart-beat">
+                <CheckCircle size={24} style={{ color: '#4CAF50' }} />
+              </div>
+              <span className="font-medium" style={{ color: '#37474F', fontFamily: 'Inter, sans-serif' }}>
+                {completedTask}
+              </span>
             </div>
-            <span className="text-green-800 font-medium">{completedTask}</span>
           </div>
         )}
 
         {/* User Points Display */}
         {currentUser && (
-          <div className="mb-6 p-4 bg-yellow-100 border border-yellow-300 rounded-lg max-w-2xl mx-auto">
+          <div className="mb-6 glassmorphic-card p-4 max-w-2xl mx-auto" style={{ backgroundColor: 'rgba(255, 213, 79, 0.2)' }}>
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-yellow-400 rounded-full flex items-center justify-center">
+                <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: '#FFD54F' }}>
                   <span className="text-xl">🏆</span>
                 </div>
                 <div>
-                  <p className="text-yellow-800 font-semibold">Your Paw Points</p>
-                  <p className="text-yellow-700 text-sm">{currentUser}</p>
+                  <p className="font-semibold" style={{ color: '#37474F', fontFamily: 'Inter, sans-serif' }}>Your Paw Points</p>
+                  <p className="text-sm" style={{ color: '#546E7A', fontFamily: 'Inter, sans-serif' }}>{currentUser}</p>
                 </div>
               </div>
               <div className="text-right">
-                <p className="text-2xl font-bold text-yellow-800">{userPoints}</p>
-                <p className="text-yellow-700 text-xs">Points Earned</p>
+                <p className="text-2xl font-bold" style={{ color: '#37474F' }}>{userPoints}</p>
+                <p className="text-xs" style={{ color: '#546E7A', fontFamily: 'Inter, sans-serif' }}>Points Earned</p>
               </div>
             </div>
           </div>
         )}
 
         {/* Set Reminder Form */}
-        <div className="bg-white rounded-xl shadow-lg p-6 mb-6 max-w-2xl mx-auto">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center space-x-2">
-            <Plus size={20} className="text-teal-500" />
+        <div className="glassmorphic-card p-6 mb-6 max-w-2xl mx-auto">
+          <h2 className="text-xl font-semibold mb-6 flex items-center space-x-2" style={{ color: '#37474F', fontFamily: 'Inter, sans-serif' }}>
+            <Plus size={20} style={{ color: '#26A69A' }} />
             <span>Set New Reminder</span>
           </h2>
 
-          <div className="space-y-4">
+          <div className="space-y-6">
             {/* Task Input */}
             <div>
-              <label htmlFor="task" className="block text-sm font-semibold text-gray-700 mb-2 flex items-center space-x-2">
-                <Bell size={16} className="text-gray-500" />
+              <label 
+                htmlFor="task" 
+                className="block text-sm font-semibold mb-3 flex items-center space-x-2"
+                style={{ color: '#37474F', fontFamily: 'Inter, sans-serif' }}
+              >
+                <Bell size={16} style={{ color: '#546E7A' }} />
                 <span>Task *</span>
               </label>
               <input
@@ -328,20 +393,26 @@ const Reminders: React.FC<RemindersProps> = ({ onBack, onPawPointsUpdate }) => {
                 id="task"
                 value={formData.task}
                 onChange={(e) => handleInputChange('task', e.target.value)}
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-teal-400 focus:ring-2 focus:ring-teal-200 focus:ring-opacity-50 transition-all duration-200 text-gray-800 placeholder-gray-400"
+                className="glassmorphic-input w-full px-4 py-4 rounded-xl transition-all duration-300 border-coral-glow"
+                style={{ 
+                  fontFamily: 'Inter, sans-serif',
+                  fontSize: '16px',
+                  color: '#37474F'
+                }}
                 placeholder={petData?.name ? `e.g., Feed ${petData.name}, Walk ${petData.name}, Give medication...` : "e.g., Feed pet, Walk the dog, Give medication..."}
                 required
               />
               
               {/* Quick Task Suggestions */}
-              <div className="mt-2">
-                <p className="text-xs text-gray-500 mb-2">Quick suggestions:</p>
+              <div className="mt-3">
+                <p className="text-xs mb-2" style={{ color: '#546E7A', fontFamily: 'Inter, sans-serif' }}>Quick suggestions:</p>
                 <div className="flex flex-wrap gap-2">
                   {getSuggestedTasks().slice(0, 4).map((suggestion, index) => (
                     <button
                       key={index}
                       onClick={() => handleInputChange('task', suggestion)}
-                      className="text-xs bg-teal-100 text-teal-700 px-2 py-1 rounded-full hover:bg-teal-200 transition-colors duration-200"
+                      className="text-xs px-3 py-1 rounded-full transition-colors duration-200"
+                      style={{ backgroundColor: 'rgba(38, 166, 154, 0.2)', color: '#26A69A' }}
                     >
                       {suggestion}
                     </button>
@@ -352,8 +423,12 @@ const Reminders: React.FC<RemindersProps> = ({ onBack, onPawPointsUpdate }) => {
 
             {/* Time Input */}
             <div>
-              <label htmlFor="time" className="block text-sm font-semibold text-gray-700 mb-2 flex items-center space-x-2">
-                <Clock size={16} className="text-gray-500" />
+              <label 
+                htmlFor="time" 
+                className="block text-sm font-semibold mb-3 flex items-center space-x-2"
+                style={{ color: '#37474F', fontFamily: 'Inter, sans-serif' }}
+              >
+                <Clock size={16} style={{ color: '#546E7A' }} />
                 <span>Time *</span>
               </label>
               <input
@@ -361,7 +436,12 @@ const Reminders: React.FC<RemindersProps> = ({ onBack, onPawPointsUpdate }) => {
                 id="time"
                 value={formData.time}
                 onChange={(e) => handleInputChange('time', e.target.value)}
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-teal-400 focus:ring-2 focus:ring-teal-200 focus:ring-opacity-50 transition-all duration-200 text-gray-800"
+                className="glassmorphic-input w-full px-4 py-4 rounded-xl transition-all duration-300"
+                style={{ 
+                  fontFamily: 'Inter, sans-serif',
+                  fontSize: '16px',
+                  color: '#37474F'
+                }}
                 required
               />
             </div>
@@ -370,11 +450,17 @@ const Reminders: React.FC<RemindersProps> = ({ onBack, onPawPointsUpdate }) => {
             <button
               onClick={handleSetReminder}
               disabled={!isFormValid}
-              className={`w-full py-4 px-6 rounded-lg font-semibold text-gray-800 transition-all duration-300 flex items-center justify-center space-x-2 ${
+              className={`w-full py-4 px-6 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center space-x-3 ${
                 isFormValid
-                  ? 'bg-pink-300 hover:bg-pink-400 hover:scale-105 shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-pink-400 focus:ring-opacity-50'
-                  : 'bg-gray-300 cursor-not-allowed'
+                  ? 'hover:scale-105 shadow-lg hover:shadow-xl animate-pulse-on-hover focus:outline-none focus:ring-2 focus:ring-opacity-50'
+                  : 'opacity-60 cursor-not-allowed'
               }`}
+              style={{
+                backgroundColor: '#26A69A',
+                color: 'white',
+                fontFamily: 'Inter, sans-serif',
+                boxShadow: '0 8px 32px 0 rgba(38, 166, 154, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 -1px 0 rgba(0, 0, 0, 0.1)'
+              }}
             >
               <Plus size={20} />
               <span>Set Reminder</span>
@@ -385,29 +471,30 @@ const Reminders: React.FC<RemindersProps> = ({ onBack, onPawPointsUpdate }) => {
         {/* Active Reminders */}
         {activeReminders.length > 0 && (
           <div className="mb-6">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center space-x-2">
-              <Bell size={20} className="text-yellow-500" />
+            <h2 className="text-xl font-semibold mb-6 flex items-center space-x-2" style={{ color: '#37474F', fontFamily: 'Inter, sans-serif' }}>
+              <Bell size={20} style={{ color: '#FFD54F' }} />
               <span>Active Reminders ({activeReminders.length})</span>
             </h2>
 
-            <div className="space-y-3 max-w-2xl mx-auto">
+            <div className="space-y-4 max-w-2xl mx-auto">
               {activeReminders.map((reminder) => (
-                <div key={reminder.id} className="bg-yellow-400 rounded-lg p-4 shadow-md hover:shadow-lg transition-all duration-300">
+                <div key={reminder.id} className="glassmorphic-card p-4 hover:shadow-lg transition-all duration-300" style={{ backgroundColor: 'rgba(255, 213, 79, 0.3)' }}>
                   <div className="flex items-center justify-between">
                     <div className="flex-1">
                       <div className="flex items-center space-x-3 mb-2">
-                        <Clock size={18} className="text-gray-700" />
-                        <span className="font-semibold text-gray-800 text-lg">
+                        <Clock size={18} style={{ color: '#37474F' }} />
+                        <span className="font-semibold text-lg" style={{ color: '#37474F', fontFamily: 'Inter, sans-serif' }}>
                           {formatTime(reminder.time)}
                         </span>
                       </div>
-                      <p className="text-gray-800 font-medium ml-7">{reminder.task}</p>
+                      <p className="font-medium ml-7" style={{ color: '#37474F', fontFamily: 'Inter, sans-serif' }}>{reminder.task}</p>
                     </div>
                     
                     <div className="flex items-center space-x-2">
                       <button
                         onClick={() => handleCompleteReminder(reminder.id, reminder.task)}
-                        className="bg-green-500 hover:bg-green-600 text-white p-2 rounded-full transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-50"
+                        className="p-2 rounded-full transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-opacity-50"
+                        style={{ backgroundColor: '#FFD54F', color: '#37474F' }}
                         title="Complete task (+10 Paw Points)"
                       >
                         <CheckCircle size={20} />
@@ -415,7 +502,8 @@ const Reminders: React.FC<RemindersProps> = ({ onBack, onPawPointsUpdate }) => {
                       
                       <button
                         onClick={() => handleDeleteReminder(reminder.id)}
-                        className="bg-red-500 hover:bg-red-600 text-white p-2 rounded-full transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-50"
+                        className="p-2 rounded-full transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-opacity-50"
+                        style={{ backgroundColor: '#D32F2F', color: 'white' }}
                         title="Delete reminder"
                       >
                         <Trash2 size={18} />
@@ -431,31 +519,32 @@ const Reminders: React.FC<RemindersProps> = ({ onBack, onPawPointsUpdate }) => {
         {/* Completed Reminders */}
         {completedReminders.length > 0 && (
           <div className="mb-6">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center space-x-2">
-              <CheckCircle size={20} className="text-green-500" />
+            <h2 className="text-xl font-semibold mb-6 flex items-center space-x-2" style={{ color: '#37474F', fontFamily: 'Inter, sans-serif' }}>
+              <CheckCircle size={20} style={{ color: '#4CAF50' }} />
               <span>Completed Today ({completedReminders.length})</span>
             </h2>
 
             <div className="space-y-3 max-h-64 overflow-y-auto max-w-2xl mx-auto">
               {completedReminders.map((reminder) => (
-                <div key={reminder.id} className="bg-green-100 rounded-lg p-4 shadow-md opacity-75">
+                <div key={reminder.id} className="glassmorphic-card p-4 opacity-75" style={{ backgroundColor: 'rgba(76, 175, 80, 0.2)' }}>
                   <div className="flex items-center justify-between">
                     <div className="flex-1">
                       <div className="flex items-center space-x-3 mb-2">
-                        <CheckCircle size={18} className="text-green-600" />
-                        <span className="font-semibold text-gray-700 text-lg line-through">
+                        <CheckCircle size={18} style={{ color: '#4CAF50' }} />
+                        <span className="font-semibold text-lg line-through" style={{ color: '#546E7A', fontFamily: 'Inter, sans-serif' }}>
                           {formatTime(reminder.time)}
                         </span>
-                        <span className="bg-green-500 text-white text-xs px-2 py-1 rounded-full font-medium">
+                        <span className="text-xs px-2 py-1 rounded-full font-medium" style={{ backgroundColor: '#4CAF50', color: 'white' }}>
                           +10 Points
                         </span>
                       </div>
-                      <p className="text-gray-700 font-medium ml-7 line-through">{reminder.task}</p>
+                      <p className="font-medium ml-7 line-through" style={{ color: '#546E7A', fontFamily: 'Inter, sans-serif' }}>{reminder.task}</p>
                     </div>
                     
                     <button
                       onClick={() => handleDeleteReminder(reminder.id)}
-                      className="bg-gray-400 hover:bg-gray-500 text-white p-2 rounded-full transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50"
+                      className="p-2 rounded-full transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-opacity-50"
+                      style={{ backgroundColor: '#9E9E9E', color: 'white' }}
                       title="Remove from list"
                     >
                       <Trash2 size={16} />
@@ -470,13 +559,13 @@ const Reminders: React.FC<RemindersProps> = ({ onBack, onPawPointsUpdate }) => {
         {/* Empty State */}
         {reminders.length === 0 && (
           <div className="text-center py-12 max-w-2xl mx-auto">
-            <Bell size={64} className="mx-auto mb-4 text-gray-300" />
-            <h3 className="text-xl font-semibold text-gray-600 mb-2">No Reminders Yet</h3>
-            <p className="text-gray-500 mb-6">
+            <Bell size={64} className="mx-auto mb-4 opacity-30" style={{ color: '#546E7A' }} />
+            <h3 className="text-xl font-semibold mb-2" style={{ color: '#546E7A', fontFamily: 'Inter, sans-serif' }}>No Reminders Yet</h3>
+            <p className="mb-6" style={{ color: '#546E7A', fontFamily: 'Inter, sans-serif' }}>
               Set your first reminder to start earning Paw Points and keep {petData?.name || 'your pet'} healthy!
             </p>
-            <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-              <p className="text-yellow-800 font-medium text-sm">
+            <div className="glassmorphic-card p-4">
+              <p className="font-medium text-sm" style={{ color: '#FFD54F', fontFamily: 'Inter, sans-serif' }}>
                 💡 Each completed reminder earns you 10 Paw Points!
               </p>
             </div>
@@ -484,26 +573,26 @@ const Reminders: React.FC<RemindersProps> = ({ onBack, onPawPointsUpdate }) => {
         )}
 
         {/* Tips Section */}
-        <div className="bg-white rounded-xl shadow-md p-6 max-w-2xl mx-auto">
-          <h3 className="font-semibold text-gray-800 mb-3 flex items-center space-x-2">
-            <Sparkles size={20} className="text-teal-500" />
+        <div className="glassmorphic-card p-6 mb-6 max-w-2xl mx-auto">
+          <h3 className="font-semibold mb-4 flex items-center space-x-2" style={{ color: '#37474F', fontFamily: 'Inter, sans-serif' }}>
+            <Sparkles size={20} style={{ color: '#26A69A' }} />
             <span>Reminder Tips</span>
           </h3>
-          <div className="space-y-3 text-gray-600 text-sm">
+          <div className="space-y-3 text-sm" style={{ color: '#546E7A', fontFamily: 'Inter, sans-serif' }}>
             <div className="flex items-start space-x-3">
-              <div className="w-2 h-2 bg-teal-500 rounded-full mt-2 flex-shrink-0"></div>
+              <div className="w-2 h-2 rounded-full mt-2 flex-shrink-0" style={{ backgroundColor: '#26A69A' }}></div>
               <p>Complete tasks to earn 10 Paw Points each - stay consistent!</p>
             </div>
             <div className="flex items-start space-x-3">
-              <div className="w-2 h-2 bg-teal-500 rounded-full mt-2 flex-shrink-0"></div>
+              <div className="w-2 h-2 rounded-full mt-2 flex-shrink-0" style={{ backgroundColor: '#26A69A' }}></div>
               <p>Set regular feeding times to maintain your pet's healthy routine</p>
             </div>
             <div className="flex items-start space-x-3">
-              <div className="w-2 h-2 bg-teal-500 rounded-full mt-2 flex-shrink-0"></div>
+              <div className="w-2 h-2 rounded-full mt-2 flex-shrink-0" style={{ backgroundColor: '#26A69A' }}></div>
               <p>Use specific task names like "Feed {petData?.name || 'Rover'}" instead of just "Feed"</p>
             </div>
             <div className="flex items-start space-x-3">
-              <div className="w-2 h-2 bg-teal-500 rounded-full mt-2 flex-shrink-0"></div>
+              <div className="w-2 h-2 rounded-full mt-2 flex-shrink-0" style={{ backgroundColor: '#26A69A' }}></div>
               <p>Set medication reminders at the same time each day for consistency</p>
             </div>
           </div>
@@ -511,16 +600,16 @@ const Reminders: React.FC<RemindersProps> = ({ onBack, onPawPointsUpdate }) => {
 
         {/* User Context Info */}
         {currentUser && (
-          <div className="mt-6 p-4 bg-teal-50 border border-teal-200 rounded-lg max-w-2xl mx-auto">
+          <div className="glassmorphic-helper p-4 rounded-lg max-w-2xl mx-auto mb-6">
             <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-teal-500 rounded-full flex items-center justify-center">
+              <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: '#26A69A' }}>
                 <span className="text-white text-sm">👤</span>
               </div>
               <div>
-                <p className="text-teal-800 font-medium text-sm">
+                <p className="font-medium text-sm" style={{ color: '#26A69A', fontFamily: 'Inter, sans-serif' }}>
                   Reminders for {currentUser}
                 </p>
-                <p className="text-teal-700 text-xs">
+                <p className="text-xs" style={{ color: '#546E7A', fontFamily: 'Inter, sans-serif' }}>
                   All reminders and points are securely stored and linked to your account
                 </p>
               </div>
@@ -529,16 +618,16 @@ const Reminders: React.FC<RemindersProps> = ({ onBack, onPawPointsUpdate }) => {
         )}
 
         {/* Paw Points Info */}
-        <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg max-w-2xl mx-auto">
+        <div className="glassmorphic-card p-4 max-w-2xl mx-auto">
           <div className="flex items-center space-x-3">
-            <div className="animate-bounce">
+            <div className="animate-bounce-gentle">
               <span className="text-2xl">🏆</span>
             </div>
             <div>
-              <p className="text-yellow-800 font-medium text-sm">
+              <p className="font-medium text-sm" style={{ color: '#37474F', fontFamily: 'Inter, sans-serif' }}>
                 Complete reminders to earn Paw Points and show your dedication to pet care!
               </p>
-              <p className="text-yellow-700 text-xs mt-1">
+              <p className="text-xs mt-1" style={{ color: '#546E7A', fontFamily: 'Inter, sans-serif' }}>
                 Your points sync with the Home Screen counter automatically
               </p>
             </div>
