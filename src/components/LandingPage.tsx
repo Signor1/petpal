@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Heart, Activity, MapPin, Clock, ArrowRight, Twitter, Instagram } from 'lucide-react';
+import { Heart, Activity, MapPin, Clock, ArrowRight, Twitter, Instagram, Star } from 'lucide-react';
 
 interface LandingPageProps {
   onGetStarted: () => void;
@@ -24,197 +24,211 @@ const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted }) => {
     {
       icon: Heart,
       title: 'AI Care Tips',
-      description: 'Get personalized daily advice tailored to your pet\'s breed, age, and health needs.',
+      description: 'Get personalized daily advice tailored to your pet\'s breed, age, and health needs with our advanced AI system.',
+      color: '#4A90E2',
       emoji: '🐾'
     },
     {
       icon: Activity,
       title: 'Health Tracking',
-      description: 'Log symptoms and weight changes with intelligent health monitoring.',
+      description: 'Log symptoms and weight changes with intelligent health monitoring and get instant recommendations.',
+      color: '#F28C38',
       emoji: '❤️'
     },
     {
       icon: MapPin,
       title: 'Vet Finder',
-      description: 'Discover nearby veterinarians with ratings, specialties, and contact info.',
+      description: 'Discover nearby veterinarians with ratings, specialties, emergency services, and verified reviews.',
+      color: '#A8D5BA',
       emoji: '📍'
     },
     {
       icon: Clock,
-      title: 'Reminders',
-      description: 'Set care tasks and earn Paw Points for consistent pet care.',
+      title: 'Reminders & Points',
+      description: 'Set care tasks, get timely notifications, and earn Paw Points for consistent pet care habits.',
+      color: '#F5E8C7',
       emoji: '🕐'
     }
   ];
 
   return (
-    <div className="min-h-screen relative overflow-hidden" style={{ backgroundColor: '#F5F5F5' }}>
-      {/* Coral Confetti Animation on Load */}
+    <div className="min-h-screen relative overflow-hidden" style={{ backgroundColor: '#FFFFFF' }}>
+      {/* Soft Blue Confetti Animation on Load */}
       {showConfetti && (
         <div className="fixed inset-0 pointer-events-none z-40 overflow-hidden">
-          {Array.from({ length: 60 }, (_, i) => (
+          {Array.from({ length: 40 }, (_, i) => (
             <div
               key={i}
-              className="absolute w-3 h-3 opacity-80 animate-confetti"
+              className="absolute w-3 h-3 opacity-70 animate-confetti"
               style={{
                 left: `${Math.random() * 100}%`,
-                backgroundColor: '#FF6F61',
+                backgroundColor: '#4A90E2',
                 animationDelay: `${Math.random() * 3}s`,
                 borderRadius: '50%',
-                boxShadow: '0 0 6px #FF6F61',
+                boxShadow: '0 0 8px #4A90E2',
               }}
             />
           ))}
         </div>
       )}
 
-      {/* Animated Paw Trail Background */}
-      <div className="fixed inset-0 pointer-events-none z-10">
-        {Array.from({ length: 15 }, (_, i) => (
-          <div
-            key={i}
-            className="absolute opacity-30 animate-paw-trail-loop"
-            style={{
-              left: `${5 + (i * 6)}%`,
-              top: `${15 + (i % 4) * 20}%`,
-              animationDelay: `${i * 0.8}s`,
-              animationDuration: '8s',
-              animationIterationCount: 'infinite',
-            }}
-          >
-            <div className="w-8 h-8 text-3xl" style={{ color: '#26A69A' }}>🐾</div>
-          </div>
-        ))}
-      </div>
-
-      <div className="relative z-20 w-full max-w-4xl mx-auto px-4 py-8">
-        {/* Header with Bouncing Paw */}
-        <header className="text-center mb-12">
-          <div className="flex items-center justify-center space-x-4 mb-6">
-            <div className="animate-bounce text-4xl">🐾</div>
-            <h1 
-              className="text-4xl md:text-5xl font-bold animate-bounce-gentle"
-              style={{ 
-                fontFamily: 'Bubblegum Sans, cursive',
-                background: 'linear-gradient(135deg, #26A69A 0%, #FF6F61 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text'
-              }}
-            >
-              PetPal: Your AI Pet Care Companion
-            </h1>
-            <div className="animate-bounce text-4xl">🐾</div>
-          </div>
-        </header>
-
+      <div className="relative z-20 w-full max-w-6xl mx-auto px-4 py-8">
         {/* Hero Section */}
-        <section className="mb-16">
-          <div className="glassmorphic-card p-8 mb-8 max-w-3xl mx-auto text-center">
-            {/* Wagging Dog Avatar */}
-            <div className="mb-6">
-              <div className="w-32 h-32 mx-auto relative">
-                {/* Dog body */}
-                <div className="absolute inset-0 rounded-full" style={{ backgroundColor: '#26A69A' }}></div>
-                
-                {/* Dog face */}
-                <div className="absolute top-2 left-2 right-2 bottom-2 rounded-full" style={{ backgroundColor: '#1E8E85' }}>
-                  {/* Animated eyes */}
-                  <div className="absolute top-6 left-6 w-4 h-4 bg-white rounded-full animate-pulse">
-                    <div className="absolute top-1 left-1 w-2 h-2 bg-black rounded-full"></div>
-                  </div>
-                  <div className="absolute top-6 right-6 w-4 h-4 bg-white rounded-full animate-pulse">
-                    <div className="absolute top-1 right-1 w-2 h-2 bg-black rounded-full"></div>
-                  </div>
-                  
-                  {/* Nose */}
-                  <div className="absolute top-12 left-1/2 transform -translate-x-1/2 w-3 h-3 bg-white rounded-full"></div>
-                  
-                  {/* Mouth */}
-                  <div className="absolute top-16 left-1/2 transform -translate-x-1/2 w-6 h-4 border-b-2 border-white rounded-full"></div>
+        <section className="mb-20">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Left Content */}
+            <div className="text-left">
+              <h1 
+                className="text-4xl md:text-6xl font-bold mb-6 leading-tight"
+                style={{ 
+                  fontFamily: 'Poppins, sans-serif',
+                  color: '#333333'
+                }}
+              >
+                PetPal: Your Pet's{' '}
+                <span 
+                  className="block"
+                  style={{ 
+                    background: 'linear-gradient(135deg, #F28C38 0%, #4A90E2 100%)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text'
+                  }}
+                >
+                  AI-Powered Companion
+                </span>
+              </h1>
+              
+              <p 
+                className="text-xl mb-8 leading-relaxed"
+                style={{ 
+                  fontFamily: 'Poppins, sans-serif',
+                  color: '#666666',
+                  maxWidth: '500px'
+                }}
+              >
+                Transform your pet care routine with personalized AI recommendations, health tracking, and expert guidance - all in one beautiful app.
+              </p>
+
+              {/* Get Started Button */}
+              <button
+                onClick={onGetStarted}
+                className="px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-300 hover:scale-105 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-orange-200 flex items-center space-x-3"
+                style={{
+                  backgroundColor: '#F28C38',
+                  color: '#FFFFFF',
+                  fontFamily: 'Poppins, sans-serif',
+                  boxShadow: '0 8px 25px rgba(242, 140, 56, 0.3)'
+                }}
+              >
+                <span>Get Started Free</span>
+                <ArrowRight size={20} />
+              </button>
+
+              {/* Trust Indicators */}
+              <div className="mt-8 flex items-center space-x-6">
+                <div className="flex items-center space-x-1">
+                  {Array.from({ length: 5 }, (_, i) => (
+                    <Star key={i} size={16} className="fill-current" style={{ color: '#F28C38' }} />
+                  ))}
                 </div>
-                
-                {/* Wagging tail */}
-                <div className="absolute -right-6 top-10 w-8 h-8 rounded-full animate-wag origin-left" style={{ backgroundColor: '#26A69A' }}></div>
+                <p 
+                  className="text-sm"
+                  style={{ 
+                    fontFamily: 'Poppins, sans-serif',
+                    color: '#666666'
+                  }}
+                >
+                  Trusted by 10,000+ pet parents
+                </p>
               </div>
             </div>
 
-            {/* Tagline */}
-            <h2 
-              className="text-xl md:text-2xl mb-8 leading-relaxed"
-              style={{ 
-                fontFamily: 'Inter, sans-serif',
-                color: '#37474F'
-              }}
-            >
-              Care for your pet like never before with AI!
-            </h2>
-
-            {/* Get Started Button */}
-            <button
-              onClick={onGetStarted}
-              className="px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:scale-105 animate-pulse-on-hover focus:outline-none focus:ring-2 focus:ring-opacity-50 flex items-center space-x-3 mx-auto"
-              style={{
-                backgroundColor: '#26A69A',
-                color: 'white',
-                fontFamily: 'Inter, sans-serif',
-                boxShadow: '0 8px 32px 0 rgba(38, 166, 154, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 -1px 0 rgba(0, 0, 0, 0.1)'
-              }}
-            >
-              <span>Get Started</span>
-              <ArrowRight size={20} />
-            </button>
+            {/* Right Content - Hero Image */}
+            <div className="relative">
+              <div className="relative overflow-hidden rounded-2xl shadow-2xl">
+                {/* High-resolution dog image placeholder with zoom effect */}
+                <div 
+                  className="w-full h-96 bg-gradient-to-br from-orange-100 to-blue-100 flex items-center justify-center transition-transform duration-700 hover:scale-105"
+                  style={{ 
+                    backgroundImage: 'url("https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg?auto=compress&cs=tinysrgb&w=800")',
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center'
+                  }}
+                >
+                  {/* Overlay for better text readability */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                </div>
+                
+                {/* Floating elements */}
+                <div className="absolute top-4 right-4 bg-white rounded-full p-3 shadow-lg animate-bounce">
+                  <Heart size={24} style={{ color: '#F28C38' }} />
+                </div>
+                <div className="absolute bottom-4 left-4 bg-white rounded-full p-3 shadow-lg animate-pulse">
+                  <span className="text-2xl">🐾</span>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 
         {/* Features Section */}
-        <section className="mb-16">
-          <h2 
-            className="text-2xl md:text-3xl font-bold text-center mb-12"
-            style={{ 
-              fontFamily: 'Inter, sans-serif',
-              color: '#37474F'
-            }}
-          >
-            Everything Your Pet Needs
-          </h2>
+        <section className="mb-20">
+          <div className="text-center mb-16">
+            <h2 
+              className="text-3xl md:text-4xl font-bold mb-6"
+              style={{ 
+                fontFamily: 'Poppins, sans-serif',
+                color: '#333333'
+              }}
+            >
+              Everything Your Pet Needs
+            </h2>
+            <p 
+              className="text-lg max-w-2xl mx-auto"
+              style={{ 
+                fontFamily: 'Poppins, sans-serif',
+                color: '#666666'
+              }}
+            >
+              Comprehensive pet care tools powered by artificial intelligence to keep your furry friend healthy and happy.
+            </p>
+          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {features.map((feature, index) => (
               <div 
                 key={index}
-                className="glassmorphic-card p-6 hover:scale-105 transition-all duration-300 border-coral-glow"
+                className="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border border-gray-100"
                 style={{ 
-                  backgroundColor: 'rgba(255, 111, 97, 0.1)',
-                  backdropFilter: 'blur(10px)',
-                  border: '2px solid #FF6F61'
+                  boxShadow: '0 10px 40px rgba(0, 0, 0, 0.1)'
                 }}
               >
                 <div className="flex items-start space-x-4">
                   <div 
-                    className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0"
-                    style={{ backgroundColor: 'rgba(38, 166, 154, 0.2)' }}
+                    className="w-16 h-16 rounded-xl flex items-center justify-center flex-shrink-0"
+                    style={{ backgroundColor: `${feature.color}20` }}
                   >
-                    <feature.icon size={24} style={{ color: '#26A69A' }} />
+                    <feature.icon size={28} style={{ color: feature.color }} />
                   </div>
                   <div className="flex-1">
-                    <div className="flex items-center space-x-2 mb-3">
+                    <div className="flex items-center space-x-2 mb-4">
                       <h3 
-                        className="text-lg font-semibold"
+                        className="text-xl font-semibold"
                         style={{ 
-                          fontFamily: 'Inter, sans-serif',
-                          color: '#37474F'
+                          fontFamily: 'Poppins, sans-serif',
+                          color: '#333333'
                         }}
                       >
                         {feature.title}
                       </h3>
-                      <span className="text-xl">{feature.emoji}</span>
+                      <span className="text-2xl">{feature.emoji}</span>
                     </div>
                     <p 
                       className="leading-relaxed"
                       style={{ 
-                        fontFamily: 'Inter, sans-serif',
-                        color: '#37474F',
+                        fontFamily: 'Poppins, sans-serif',
+                        color: '#666666',
                         fontSize: '16px'
                       }}
                     >
@@ -227,73 +241,146 @@ const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted }) => {
           </div>
         </section>
 
+        {/* Testimonial Section */}
+        <section className="mb-20">
+          <div 
+            className="rounded-2xl p-12 text-center max-w-4xl mx-auto"
+            style={{ 
+              backgroundColor: '#4A90E2',
+              background: 'linear-gradient(135deg, #4A90E2 0%, #5BA3F5 100%)'
+            }}
+          >
+            <div className="mb-6">
+              <div className="flex justify-center space-x-1 mb-4">
+                {Array.from({ length: 5 }, (_, i) => (
+                  <Star key={i} size={24} className="fill-current text-yellow-300" />
+                ))}
+              </div>
+              <blockquote 
+                className="text-2xl md:text-3xl font-medium mb-6 italic"
+                style={{ 
+                  fontFamily: 'Poppins, sans-serif',
+                  color: '#FFFFFF'
+                }}
+              >
+                "PetPal keeps Milo healthy and happy! The AI recommendations are spot-on and the reminders help me stay consistent with his care routine."
+              </blockquote>
+              <div className="flex items-center justify-center space-x-4">
+                <div 
+                  className="w-16 h-16 rounded-full bg-white flex items-center justify-center"
+                  style={{ backgroundColor: '#F5E8C7' }}
+                >
+                  <span className="text-2xl">👩</span>
+                </div>
+                <div className="text-left">
+                  <p 
+                    className="font-semibold text-lg"
+                    style={{ 
+                      fontFamily: 'Poppins, sans-serif',
+                      color: '#FFFFFF'
+                    }}
+                  >
+                    Emma Johnson
+                  </p>
+                  <p 
+                    className="text-sm opacity-90"
+                    style={{ 
+                      fontFamily: 'Poppins, sans-serif',
+                      color: '#FFFFFF'
+                    }}
+                  >
+                    Golden Retriever Owner
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Call to Action */}
         <section className="mb-16">
-          <div className="glassmorphic-card p-8 text-center max-w-2xl mx-auto" style={{ backgroundColor: 'rgba(255, 213, 79, 0.2)' }}>
-            <div className="text-4xl mb-4">🏆</div>
+          <div className="bg-white rounded-2xl p-12 text-center shadow-xl border border-gray-100">
+            <div className="text-6xl mb-6">🏆</div>
             <h3 
-              className="text-xl font-semibold mb-4"
+              className="text-3xl font-bold mb-6"
               style={{ 
-                fontFamily: 'Inter, sans-serif',
-                color: '#37474F'
+                fontFamily: 'Poppins, sans-serif',
+                color: '#333333'
               }}
             >
               Join Thousands of Happy Pet Parents
             </h3>
             <p 
-              className="mb-6"
+              className="text-lg mb-8 max-w-2xl mx-auto"
               style={{ 
-                fontFamily: 'Inter, sans-serif',
-                color: '#546E7A'
+                fontFamily: 'Poppins, sans-serif',
+                color: '#666666'
               }}
             >
-              Start your journey to better pet care today. Create your free account and unlock personalized AI recommendations.
+              Start your journey to better pet care today. Create your free account and unlock personalized AI recommendations, health tracking, and expert guidance.
             </p>
             <button
               onClick={onGetStarted}
-              className="px-6 py-3 rounded-lg font-semibold transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-opacity-50"
+              className="px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-300 hover:scale-105 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-orange-200"
               style={{
-                backgroundColor: '#FFD54F',
-                color: '#37474F',
-                fontFamily: 'Inter, sans-serif'
+                backgroundColor: '#F28C38',
+                color: '#FFFFFF',
+                fontFamily: 'Poppins, sans-serif',
+                boxShadow: '0 8px 25px rgba(242, 140, 56, 0.3)'
               }}
             >
               Start Free Today
             </button>
+            
+            {/* Additional benefits */}
+            <div className="mt-8 flex flex-wrap justify-center gap-6 text-sm" style={{ color: '#666666' }}>
+              <div className="flex items-center space-x-2">
+                <span className="text-green-500">✓</span>
+                <span>Free forever plan</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <span className="text-green-500">✓</span>
+                <span>No credit card required</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <span className="text-green-500">✓</span>
+                <span>Setup in 2 minutes</span>
+              </div>
+            </div>
           </div>
         </section>
 
-        {/* Glassmorphic Footer */}
-        <footer className="glassmorphic-card p-6">
-          <div className="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
+        {/* Footer */}
+        <footer className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
+          <div className="flex flex-col md:flex-row items-center justify-between space-y-6 md:space-y-0">
             {/* Built with Bolt.new Badge */}
             <a
               href="https://bolt.new"
               target="_blank"
               rel="noopener noreferrer"
-              className="glassmorphic-badge inline-flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-300 hover:scale-105"
-              style={{ fontFamily: 'Inter, sans-serif' }}
+              className="inline-flex items-center space-x-3 px-6 py-3 rounded-full transition-all duration-300 hover:scale-105 bg-gray-50 hover:bg-gray-100"
+              style={{ fontFamily: 'Poppins, sans-serif' }}
             >
-              <span style={{ color: '#546E7A' }}>Built with</span>
-              <span className="font-semibold" style={{ color: '#26A69A' }}>Bolt.new</span>
-              <span className="text-xs px-2 py-1 rounded-full" style={{ backgroundColor: '#26A69A', color: 'white' }}>+ Voice AI</span>
+              <span style={{ color: '#666666' }}>Built with</span>
+              <span className="font-semibold" style={{ color: '#4A90E2' }}>Bolt.new</span>
+              <span className="text-xs px-3 py-1 rounded-full text-white" style={{ backgroundColor: '#4A90E2' }}>+ Voice AI</span>
             </a>
 
             {/* Social Icons */}
             <div className="flex items-center space-x-4">
               <button 
-                className="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
-                style={{ backgroundColor: '#FFD54F' }}
+                className="w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-md"
+                style={{ backgroundColor: '#F28C38' }}
                 title="Follow us on Twitter"
               >
-                <Twitter size={18} style={{ color: '#37474F' }} />
+                <Twitter size={20} style={{ color: '#FFFFFF' }} />
               </button>
               <button 
-                className="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
-                style={{ backgroundColor: '#FFD54F' }}
+                className="w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-md"
+                style={{ backgroundColor: '#F28C38' }}
                 title="Follow us on Instagram"
               >
-                <Instagram size={18} style={{ color: '#37474F' }} />
+                <Instagram size={20} style={{ color: '#FFFFFF' }} />
               </button>
             </div>
 
@@ -301,11 +388,11 @@ const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted }) => {
             <p 
               className="text-sm"
               style={{ 
-                fontFamily: 'Inter, sans-serif',
-                color: '#546E7A'
+                fontFamily: 'Poppins, sans-serif',
+                color: '#666666'
               }}
             >
-              © 2025 PetPal
+              © 2025 PetPal. All rights reserved.
             </p>
           </div>
         </footer>
